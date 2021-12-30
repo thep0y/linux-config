@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:19:00
+# @Last Modified time: 2021-12-30 21:20:16
 
 set -eux
 
@@ -57,8 +57,7 @@ if [[ $(ls $HOME) =~ "桌面" ]]; then
     # sudo dpkg-reconfigure locales
 
     export LANG=en_US
-    export LC_ALL=C
-    xdg-user-dirs-gtk-update --force
+    LC_ALL=C xdg-user-dirs-gtk-update --force
     epxort LANG=zh_CN
 fi
 
