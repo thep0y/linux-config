@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 20:28:34
+# @Last Modified time: 2021-12-30 20:35:20
 
 set -eux
 
@@ -21,7 +21,9 @@ elif [ "$ID" = "ubuntu" ]; then
 elif [ "$ID" = "linuxmint" ]; then
     install_cmd="sudo apt install -y "
     # 配置 ubuntu 源
-    $UBUNTU_CODENAME
+    sudo cp /etc/apt/source.list.d/official-package-repositories.list /etc/apt/source.list.d/official-package-repositories.list.bak
+    sudo sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/source.list.d/official-package-repositories.list
+    # $UBUNTU_CODENAME
     sudo apt update
 elif [ "$ID" = "debian" ]; then
     install_cmd="sudo apt install -y "
