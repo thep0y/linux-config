@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:20:16
+# @Last Modified time: 2021-12-30 21:25:40
 
 set -eux
 
@@ -47,18 +47,13 @@ fi
 
 # 检测主目录英文，如果不是英文，则修改为英文
 if [[ $(ls $HOME) =~ "桌面" ]]; then
-    is_exists=0
-    command -v xdg-user-dirs-gtk-update >/dev/null 2>&1 || { is_exists=1; }
-    if [ $is_exists -ne 0 ]; then
-        ${install_cmd}xdg-user-dirs-gtk
-    fi
+    # is_exists=0
+    # command -v xdg-user-dirs-update >/dev/null 2>&1 || { is_exists=1; }
+    # if [ $is_exists -ne 0 ]; then
+    #     ${install_cmd}xdg-user-dirs-gtk
+    # fi
 
-    ${install_cmd}language-pack-en-base language-pack-zh-hans-base
-    # sudo dpkg-reconfigure locales
-
-    export LANG=en_US
-    LC_ALL=C xdg-user-dirs-gtk-update --force
-    epxort LANG=zh_CN
+    LC_ALL=C xdg-user-dirs-update --force
 fi
 
 
