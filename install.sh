@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:10:21
+# @Last Modified time: 2021-12-30 21:13:15
 
 set -eux
 
@@ -54,6 +54,7 @@ if [[ $(ls $HOME) =~ "桌面" ]]; then
     fi
 
     ${install_cmd}language-pack-en-base language-pack-zh-hans-base
+    sudo dpkg-reconfigure locales
 
     export LANG=en_US
     xdg-user-dirs-gtk-update --force
