@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 20:52:46
+# @Last Modified time: 2021-12-30 20:54:06
 
 set -eux
 
@@ -46,7 +46,7 @@ else
 fi
 
 # 检测主目录英文，如果不是英文，则修改为英文
-if [ $(ls $HOME) =~ "桌面" ]; then
+if [[ $(ls $HOME) =~ "桌面" ]]; then
     echo "主目录是中文"
 fi
 
