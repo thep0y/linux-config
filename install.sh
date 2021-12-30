@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:51:33
+# @Last Modified time: 2021-12-30 21:54:14
 
 set -eux
 
@@ -64,7 +64,7 @@ if [ $git_is_exists -ne 0 ]; then
 fi
 git config --global url."https://github.com.cnpmjs.org".insteadOf "https://github.com"
 # github.com.cnpmjs.org 的证书可能无法验证
-${install_cmd}libcurl4-gnutls-dev
+${install_cmd}ca-certificates
 hostname='github.com.cnpmjs.org'
 port=443
 trust_cert_file_location=`curl-config --ca`
