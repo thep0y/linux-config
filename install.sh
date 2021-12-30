@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:03:45
+# @Last Modified time: 2021-12-30 21:09:02
 
 set -eux
 
@@ -52,6 +52,8 @@ if [[ $(ls $HOME) =~ "桌面" ]]; then
     if [ $is_exists -ne 0 ]; then
         ${install_cmd}xdg-user-dirs-gtk
     fi
+
+    ${install_cmd}language-pack-en-base
 
     export LANG=en_US
     xdg-user-dirs-gtk-update --force
