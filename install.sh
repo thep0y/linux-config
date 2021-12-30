@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:46:08
+# @Last Modified time: 2021-12-30 21:49:36
 
 set -eux
 
@@ -67,6 +67,8 @@ git config --global url."https://github.com.cnpmjs.org".insteadOf "https://githu
 hostname='github.com.cnpmjs.org'
 port=443
 trust_cert_file_location=`curl-config --ca`
+
+${install_cmd}libcurl-dev
 
 sudo bash -c "echo -n | openssl s_client -showcerts -connect $hostname:$port -servername $hostname \
     2>/dev/null  | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'  \
