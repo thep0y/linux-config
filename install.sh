@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 20:54:06
+# @Last Modified time: 2021-12-30 21:03:45
 
 set -eux
 
@@ -47,7 +47,15 @@ fi
 
 # 检测主目录英文，如果不是英文，则修改为英文
 if [[ $(ls $HOME) =~ "桌面" ]]; then
-    echo "主目录是中文"
+    is_exists=0
+    command -v xdg-user-dirs-gtk-update >/dev/null 2>&1 || { is_exists=1; }
+    if [ $is_exists -ne 0 ]; then
+        ${install_cmd}xdg-user-dirs-gtk
+    fi
+
+    export LANG=en_US
+    xdg-user-dirs-gtk-update --force
+    epxort LANG=zh_CN
 fi
 
 
