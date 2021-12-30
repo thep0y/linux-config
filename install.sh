@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:25:40
+# @Last Modified time: 2021-12-30 21:27:31
 
 set -eux
 
@@ -56,8 +56,13 @@ if [[ $(ls $HOME) =~ "桌面" ]]; then
     LC_ALL=C xdg-user-dirs-update --force
 fi
 
-
 # 检测 git 是否存在，不存在则安装，存在则配置 git 代理
+git_is_exists=0
+command -v xdg-user-dirs-update >/dev/null 2>&1 || { git_is_exists=1; }
+if [ $git_is_exists -ne 0 ]; then
+    ${install_cmd}git
+fi
+git config --global url."https://github.com.cnpmjs.org".insteadOf "https://github.com"
 
 # 配置 aria2、trojan和坚果云
 
