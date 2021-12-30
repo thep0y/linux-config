@@ -2,11 +2,14 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 20:36:14
+# @Last Modified time: 2021-12-30 20:39:46
 
 set -eux
 
 install_cmd=''
+
+MIRRORS_URL="mirrors.aliyun.com"
+codename=""
 
 source /etc/os-release
 if [ "$ID" = "arch" ]; then
@@ -16,19 +19,20 @@ if [ "$ID" = "arch" ]; then
 elif [ "$ID" = "ubuntu" ]; then
     install_cmd="sudo apt install -y "
     # 配置 ubuntu 源
-    $VERSION_CODENAME
+    codename=$VERSION_CODENAME
+    sudo sed -i "s/archive.ubuntu.com/$MIRRORS_URL/g" /etc/apt/sources.list
     sudo apt update
 elif [ "$ID" = "linuxmint" ]; then
     install_cmd="sudo apt install -y "
     # 配置 ubuntu 源
     sudo cp /etc/apt/sources.list.d/official-package-repositories.list /etc/apt/sources.list.d/official-package-repositories.list.bak
-    sudo sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list.d/official-package-repositories.list
-    # $UBUNTU_CODENAME
+    sudo sed -i "s/archive.ubuntu.com/$MIRRORS_URL/g" /etc/apt/sources.list.d/official-package-repositories.list
+    codename=$UBUNTU_CODENAME
     sudo apt update
 elif [ "$ID" = "debian" ]; then
     install_cmd="sudo apt install -y "
     # 配置 debian 源
-    $VERSION_CODENAME
+    codename=$VERSION_CODENAME
     sudo apt update
 else
     echo '未知发行版'
