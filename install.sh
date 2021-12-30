@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:27:31
+# @Last Modified time: 2021-12-30 21:28:23
 
 set -eux
 
@@ -58,7 +58,7 @@ fi
 
 # 检测 git 是否存在，不存在则安装，存在则配置 git 代理
 git_is_exists=0
-command -v xdg-user-dirs-update >/dev/null 2>&1 || { git_is_exists=1; }
+command -v git >/dev/null 2>&1 || { git_is_exists=1; }
 if [ $git_is_exists -ne 0 ]; then
     ${install_cmd}git
 fi
