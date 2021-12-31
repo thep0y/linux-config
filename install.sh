@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:45:09
+# @Last Modified time: 2021-12-31 11:48:53
 
 set -eux
 
@@ -170,7 +170,7 @@ go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
-${remove_cmd}docker docker-engine docker.io
+# ${remove_cmd}docker docker-engine docker.io
 ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
 if [ "$id" = "debian" ]; then
     curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
