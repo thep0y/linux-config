@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:44:15
+# @Last Modified time: 2021-12-31 09:47:26
 
 set -eux
 
@@ -92,6 +92,7 @@ fi
 zsh_plugins="$(sed -n '73p' $HOME/.zshrc)"
 if [ $zsh_plugins = 'plugins=(git)' ]; then
     echo 'zsh没添加插件'
+    sed '73c plugins=(\n  git\n  zsh-autosuggestions\n  zsh-syntax-highlighting\n)' $HOME/.zshrc
 fi
 
 
