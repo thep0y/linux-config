@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:40:17
+# @Last Modified time: 2021-12-31 09:41:38
 
 set -eux
 
@@ -89,7 +89,8 @@ if [ ! -d "$zsh_custom/plugins/zsh-syntax-highlighting" ]; then
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $zsh_custom/plugins/zsh-syntax-highlighting
 fi
 # sed -i "s//$mirrors_url/g" $HOME/.zshrc
-zsh_plugins=echo "$(sed -n '73p' $HOME/.zshrc)"
+zsh_plugins="$(sed -n '73p' $HOME/.zshrc)"
+
 
 # 配置 aria2、trojan和坚果云
 
