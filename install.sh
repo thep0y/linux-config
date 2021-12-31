@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:57:15
+# @Last Modified time: 2021-12-31 12:42:27
 
 set -eux
 
@@ -64,6 +64,8 @@ fi
 # 检测主目录英文，如果不是英文，则修改为英文
 if [[ $(ls $HOME) =~ "桌面" ]]; then
     LC_ALL=C xdg-user-dirs-update --force
+    # 更改完如果还有中文目录，则需要删除这些中文目录
+    # rm -rf 
 fi
 
 # 检测 git 是否存在，不存在则安装，存在则配置 git 代理
@@ -197,6 +199,24 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 sudo usermod -aG docker $USER
 
+# 安装浏览器，edge 和 firefox
+if [ ! -f "/usr/bin/firefox" ]; then
+    if [ "$id" = "ubuntu" ]; then
+        # 对于没有默认安装 firefox 的发行版安装最新的 firefox-esr
+        if [ ! -d "$HOME/Applications" ]; then
+            mkdir -p $HOME/Applications
+        fi
+        curl -L -o /tmp/firefox-esr.tar.bz2 "https://download.mozilla.org/?product=firefox-esr-latest&os=linux&lang=zh-CN"
+        tar -xf /tmp/firefox-esr.tar.bz2 -C $HOME/Applicationswhre
+    elif [ "$id" = "debian" ]; then
+        # 只支持 debian 11 以上，我本人不会使用 11 以下的 debian，包括 deepin
+        ${install_cmd}firefox-esr firefox-esr-l10n-zh-cn
+    fi
+fi
+# 用 python 定位最新版的 edge
+edge_html="'''$(curl https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/)'''"
+egde_latest_deb=python3 -c "import re;latest=$edge_html.split('\n')[-4];result=re.search(r'href=\"(.*?)\"', latest); print(result.group(1))"
+edge_download_url="https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/$egde_latest_deb"
 # 配置 aria2、trojan和坚果云
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
@@ -204,8 +224,6 @@ sudo usermod -aG docker $USER
 # 安装 vscode
 
 # 安装 fcitx5-rime，并下载 98 五笔码表和皮肤
-
-# 安装浏览器，edge 和 firefox
 
 # 安装 libreoffice 套件，指定 gtk3 依赖
 
