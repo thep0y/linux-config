@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:59:11
+# @Last Modified time: 2021-12-31 10:42:03
 
 set -eux
 
@@ -96,33 +96,46 @@ if [ $zsh_plugins = 'plugins=(git)' ]; then
 fi
 
 # 安装 conda
-curl -o /tmp/minicode.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
-zsh /tmp/minicode.sh
+conda_folder=$HOME/miniconda3
+if [ ! -d $conda_folder ]; then
+    curl -o /tmp/minicode.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    zsh /tmp/minicode.sh
+    # 配置 conda
+    echo 'channels:
+      - defaults
+    show_channel_urls: true
+    default_channels:
+      - https://mirrors.bfsu.edu.cn/anaconda/pkgs/main
+      - https://mirrors.bfsu.edu.cn/anaconda/pkgs/r
+      - https://mirrors.bfsu.edu.cn/anaconda/pkgs/msys2
+    custom_channels:
+      conda-forge: https://mirrors.bfsu.edu.cn/anaconda/cloud
+      msys2: https://mirrors.bfsu.edu.cn/anaconda/cloud
+      bioconda: https://mirrors.bfsu.edu.cn/anaconda/cloud
+      menpo: https://mirrors.bfsu.edu.cn/anaconda/cloud
+      pytorch: https://mirrors.bfsu.edu.cn/anaconda/cloud
+      pytorch-lts: https://mirrors.bfsu.edu.cn/anaconda/cloud
+      simpleitk: https://mirrors.bfsu.edu.cn/anaconda/cloud' > $HOME/.condarc
+fi
 
-# 配置 conda
-echo 'channels:
-  - defaults
-show_channel_urls: true
-default_channels:
-  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/main
-  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/r
-  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/msys2
-custom_channels:
-  conda-forge: https://mirrors.bfsu.edu.cn/anaconda/cloud
-  msys2: https://mirrors.bfsu.edu.cn/anaconda/cloud
-  bioconda: https://mirrors.bfsu.edu.cn/anaconda/cloud
-  menpo: https://mirrors.bfsu.edu.cn/anaconda/cloud
-  pytorch: https://mirrors.bfsu.edu.cn/anaconda/cloud
-  pytorch-lts: https://mirrors.bfsu.edu.cn/anaconda/cloud
-  simpleitk: https://mirrors.bfsu.edu.cn/anaconda/cloud' > $HOME/.condarc
 
 # 修改 pip 源
+if [ ! -d "$HOME/.config/pip/pip.conf" ]; then
+    $HOME/miniconda3/bin/pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
+fi
 
+conda_cmd=$HOME/miniconda3/bin/conda
 # 创建 work 环境
+if [[ $($conda_cmd env list) =~ 'work' ]]; then
+    $conda_cmd create -n work python=3.9
 
-# 激活 work 环境，并安装常用包
+    # 激活 work 环境，并安装常用包
+    $conda_cmd activate work
+    pip install requests pymysql mongo
+fi
 
 # 下载并安装 go
+
 
 # 配置 go
 
