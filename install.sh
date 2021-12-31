@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:13:23
+# @Last Modified time: 2021-12-31 11:14:00
 
 set -eux
 
@@ -138,7 +138,7 @@ fi
 curl -o /tmp/go.html https://golang.google.cn/dl/
 download_ele="$(grep -Eo "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz" /tmp/go.html)"
 download_url="https://golang.google.cn${download_ele:38}"
-curl -o /tmp/go.tar.gz download_url
+curl -o /tmp/go.tar.gz $download_url
 
 # 配置 go
 
