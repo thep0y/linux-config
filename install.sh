@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-30 21:56:11
+# @Last Modified time: 2021-12-30 22:05:56
 
 set -eux
 
@@ -47,12 +47,6 @@ fi
 
 # 检测主目录英文，如果不是英文，则修改为英文
 if [[ $(ls $HOME) =~ "桌面" ]]; then
-    # is_exists=0
-    # command -v xdg-user-dirs-update >/dev/null 2>&1 || { is_exists=1; }
-    # if [ $is_exists -ne 0 ]; then
-    #     ${install_cmd}xdg-user-dirs-gtk
-    # fi
-
     LC_ALL=C xdg-user-dirs-update --force
 fi
 
@@ -63,17 +57,8 @@ if [ $git_is_exists -ne 0 ]; then
     ${install_cmd}git
 fi
 git config --global url."https://github.com.cnpmjs.org".insteadOf "https://github.com"
-# github.com.cnpmjs.org 的证书可能无法验证
+# github.com.cnpmjs.org 的证书可能无法验证，更新证书
 sudo update-ca-certificates
-# ${install_cmd}ca-certificates
-# hostname='github.com.cnpmjs.org'
-# port=443
-# trust_cert_file_location=`curl-config --ca`
-
-
-# sudo bash -c "echo -n | openssl s_client -showcerts -connect $hostname:$port -servername $hostname \
-#     2>/dev/null  | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'  \
-#     >> $trust_cert_file_location"
 
 # 检测 vim 是否存在，不存在则安装，存在则配置
 vim_is_exists=0
@@ -81,12 +66,22 @@ command -v vim >/dev/null 2>&1 || { vim_is_exists=1; }
 if [ $vim_is_exists -ne 0 ]; then
     ${install_cmd}vim
     # TODO: 下面两行的目录和文件应该判断是否存在
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
     curl -o $HOME/.vimrc https://raw.fastgit.org/thep0y/vim/master/.vimrc
 fi
 
-
 # 安装 zsh
+zsh_is_exists=0
+command -v zsh >/dev/null 2>&1 || { zsh_is_exists=1; }
+if [ $zsh_is_exists -ne 0 ]; then
+    ${install_cmd}zsh
+fi
+sh -c "$(curl -fsSL https://raw.fastgit.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+# sed -i "s//$mirrors_url/g" $HOME/.zshrc
+
+
 
 # 安装 oh-my-zsh
 
