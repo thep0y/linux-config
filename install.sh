@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 08:54:51
+# @Last Modified time: 2021-12-31 09:01:34
 
 set -eux
 
@@ -76,7 +76,8 @@ command -v zsh >/dev/null 2>&1 || { zsh_is_exists=1; }
 if [ $zsh_is_exists -ne 0 ]; then
     ${install_cmd}zsh
 fi
-if [ -z $ZSH_CUSTOM ]; then
+
+if [ ! $ZSH_CUSTOM ]; then
     sh -c "$(curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
