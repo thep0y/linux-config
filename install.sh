@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:49:08
+# @Last Modified time: 2021-12-31 09:55:46
 
 set -eux
 
@@ -94,11 +94,9 @@ if [ $zsh_plugins = 'plugins=(git)' ]; then
     echo 'zsh没添加插件'
     sed -i '73c plugins=(\n  git\n  zsh-autosuggestions\n  zsh-syntax-highlighting\n)' $HOME/.zshrc
 fi
-source .zshrc
-
-# 配置 aria2、trojan和坚果云
 
 # 安装 conda
+zsh -c "$(curl -fsSL https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh)"
 
 # 配置 conda
 
@@ -115,6 +113,8 @@ source .zshrc
 # 设置 goproxy
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
+
+# 配置 aria2、trojan和坚果云
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 
