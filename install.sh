@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:48:24
+# @Last Modified time: 2021-12-31 09:49:08
 
 set -eux
 
@@ -94,7 +94,7 @@ if [ $zsh_plugins = 'plugins=(git)' ]; then
     echo 'zsh没添加插件'
     sed -i '73c plugins=(\n  git\n  zsh-autosuggestions\n  zsh-syntax-highlighting\n)' $HOME/.zshrc
 fi
-
+source .zshrc
 
 # 配置 aria2、trojan和坚果云
 
