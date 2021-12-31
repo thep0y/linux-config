@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:18:27
+# @Last Modified time: 2021-12-31 11:20:39
 
 set -eux
 
@@ -139,6 +139,10 @@ curl -o /tmp/go.html https://golang.google.cn/dl/
 download_ele="$(grep -Eo "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz" /tmp/go.html)"
 download_url="https://dl.google.com/go${download_ele:41}"
 curl -o /tmp/go.tar.gz $download_url
+if [ -d "/usr/local/go" ]; then
+    sudo rm -rf /usr/local/go
+fi
+sudo tar -C /usr/local -xzf /tmp/go.tar.gz
 
 # 配置 go
 
