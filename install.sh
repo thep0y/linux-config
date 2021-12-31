@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:22:28
+# @Last Modified time: 2021-12-31 09:26:06
 
 set -eux
 
@@ -79,7 +79,7 @@ fi
 
 # 解释器为 bash，无法获取 ZSH_CUSTOM 变量，需要折中
 zsh_custom="$HOME/.oh-my-zsh/custom"
-if [ ! -d "$zsh_custom" ]; then
+if [ ! -d $zsh_custom ]; then
     sh -c "$(curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     git clone https://github.com/zsh-users/zsh-autosuggestions.git $zsh_custom/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $zsh_custom/plugins/zsh-syntax-highlighting
