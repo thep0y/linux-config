@@ -2,11 +2,13 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:22:18
+# @Last Modified time: 2021-12-31 11:41:43
 
 set -eux
 
 install_cmd=''
+remove_cmd=''
+id=""
 
 # 镜像站默认使用阿里云
 mirrors_url=""
@@ -15,28 +17,37 @@ if [ $MIRRORS_URL ]; then
 else
     mirrors_url="mirrors.aliyun.com"
 fi
+
 codename=""
 
 source /etc/os-release
 if [ "$ID" = "arch" ]; then
+    id=$ID
     install_cmd="sudo pacman -S --noconfirm "
+    remove_cmd="sudo pacman -R --noconfirm "
     # 配置 pacman 源
     sudo pacman -Syy
 elif [ "$ID" = "ubuntu" ]; then
+    id=$ID
     install_cmd="sudo apt install -y "
+    remove_cmd="sudo apt remove -y "
     # 配置 ubuntu 源
     codename=$VERSION_CODENAME
     sudo sed -i "s/archive.ubuntu.com/$mirrors_url/g" /etc/apt/sources.list
     sudo apt update
 elif [ "$ID" = "linuxmint" ]; then
+    id="ubuntu"
     install_cmd="sudo apt install -y "
+    remove_cmd="sudo apt remove -y "
     # 配置 ubuntu 源
     sudo cp /etc/apt/sources.list.d/official-package-repositories.list /etc/apt/sources.list.d/official-package-repositories.list.bak
     sudo sed -i "s/archive.ubuntu.com/$mirrors_url/g" /etc/apt/sources.list.d/official-package-repositories.list
     codename=$UBUNTU_CODENAME
     sudo apt update
 elif [ "$ID" = "debian" ]; then
+    id=$ID
     install_cmd="sudo apt install -y "
+    remove_cmd="sudo apt remove -y "
     # 配置 debian 源
     codename=$VERSION_CODENAME
     sudo apt update
@@ -148,13 +159,41 @@ sudo tar -C /usr/local -xzf /tmp/go.tar.gz
 echo 'GOROOT=/usr/local/go
 GOPATH=$HOME/go
 PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
+# 设置 goproxy
 source .zshenv
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
 
-# 设置 goproxy
-
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
+${remove_cmd}docker docker-engine docker.io
+${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
+if [ "$id" = "debian" ]; then
+    curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
+    echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
+   $codename \
+   stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
+elif [ "$id" = "ubuntu" ]; then
+    curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
+else
+    echo "此系统${id}尚未配置"
+    exit 1
+fi
+sudo apt update
+sudo apt install docker-ce
+sudo usermod -aG docker $USER
+if [ ! -d "/etc/docker" ]; then
+    sudo mkdir -p /etc/docker
+fi
+if [ ! -f '/etc/docker/daemon.json' ]; then
+    sudo tee /etc/docker/daemon.json <<-'EOF'
+    {
+      "registry-mirrors": ["https://mci3f39b.mirror.aliyuncs.com"]
+    }
+    EOF
+fi
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 # 配置 aria2、trojan和坚果云
 
