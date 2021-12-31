@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:52:19
+# @Last Modified time: 2021-12-31 11:53:46
 
 set -eux
 
@@ -151,23 +151,21 @@ if [[ $($conda_cmd env list) =~ 'work' ]]; then
 fi
 
 # 下载并安装 go
-curl -o /tmp/go.html https://golang.google.cn/dl/
-download_ele="$(grep -Eo "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz" /tmp/go.html)"
-download_url="https://dl.google.com/go${download_ele:41}"
-curl -o /tmp/go.tar.gz $download_url
-if [ -d "/usr/local/go" ]; then
-    sudo rm -rf /usr/local/go
+if [ ! -d "/usr/local/go" ]; then
+    curl -o /tmp/go.html https://golang.google.cn/dl/
+    download_ele="$(grep -Eo "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz" /tmp/go.html)"
+    download_url="https://dl.google.com/go${download_ele:41}"
+    curl -o /tmp/go.tar.gz $download_url
+    sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+    # 配置 go
+    echo 'GOROOT=/usr/local/go
+    GOPATH=$HOME/go
+    PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
+    # 设置 goproxy
+    source .zshenv
+    go env -w GO111MODULE=on
+    go env -w GOPROXY=https://goproxy.cn,direct
 fi
-sudo tar -C /usr/local -xzf /tmp/go.tar.gz
-
-# 配置 go
-echo 'GOROOT=/usr/local/go
-GOPATH=$HOME/go
-PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
-# 设置 goproxy
-source .zshenv
-go env -w GO111MODULE=on
-go env -w GOPROXY=https://goproxy.cn,direct
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
 # ${remove_cmd}docker docker-engine docker.io
