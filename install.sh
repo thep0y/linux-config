@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:56:29
+# @Last Modified time: 2021-12-31 09:59:11
 
 set -eux
 
@@ -96,7 +96,8 @@ if [ $zsh_plugins = 'plugins=(git)' ]; then
 fi
 
 # 安装 conda
-zsh -c "$(curl -fsSL https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh)"
+curl -o /tmp/minicode.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+zsh /tmp/minicode.sh
 
 # 配置 conda
 echo 'channels:
