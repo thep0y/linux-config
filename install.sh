@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:03:05
+# @Last Modified time: 2021-12-31 11:05:55
 
 set -eux
 
@@ -135,7 +135,8 @@ if [[ $($conda_cmd env list) =~ 'work' ]]; then
 fi
 
 # 下载并安装 go
-download_ele=echo $(curl https://golang.google.cn/dl/) | grep -E "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz"
+curl -o /tmp/go.html https://golang.google.cn/dl/
+download_ele=grep -E "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz" /tmp/go.html
 download_url=${download_ele:38}
 
 # 配置 go
