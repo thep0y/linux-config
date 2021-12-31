@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:26:06
+# @Last Modified time: 2021-12-31 09:31:18
 
 set -eux
 
@@ -81,9 +81,9 @@ fi
 zsh_custom="$HOME/.oh-my-zsh/custom"
 if [ ! -d $zsh_custom ]; then
     sh -c "$(curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git $zsh_custom/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $zsh_custom/plugins/zsh-syntax-highlighting
 fi
+git clone https://github.com/zsh-users/zsh-autosuggestions.git $zsh_custom/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $zsh_custom/plugins/zsh-syntax-highlighting
 # sed -i "s//$mirrors_url/g" $HOME/.zshrc
 
 # 配置 aria2、trojan和坚果云
