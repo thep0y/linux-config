@@ -2,9 +2,9 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 12:44:56
+# @Last Modified time: 2021-12-31 12:53:34
 
-set -eux
+# set -eux
 
 install_cmd=''
 remove_cmd=''
@@ -219,6 +219,7 @@ egde_latest_deb=$(python3 -c "import re;latest=$edge_html.split('\n')[-4];result
 edge_download_url="https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/$egde_latest_deb"
 curl -o /tmp/edge.deb $edge_download_url
 sudo dpkg -i /tmp/edge.deb
+
 # 配置 aria2、trojan和坚果云
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
