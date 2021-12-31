@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:20:39
+# @Last Modified time: 2021-12-31 11:22:18
 
 set -eux
 
@@ -145,6 +145,12 @@ fi
 sudo tar -C /usr/local -xzf /tmp/go.tar.gz
 
 # 配置 go
+echo 'GOROOT=/usr/local/go
+GOPATH=$HOME/go
+PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
+source .zshenv
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.cn,direct
 
 # 设置 goproxy
 
