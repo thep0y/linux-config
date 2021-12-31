@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:17:48
+# @Last Modified time: 2021-12-31 11:18:27
 
 set -eux
 
@@ -137,7 +137,7 @@ fi
 # 下载并安装 go
 curl -o /tmp/go.html https://golang.google.cn/dl/
 download_ele="$(grep -Eo "<a class=\"download downloadBox\" href=\"\/dl\/go.*\.linux-amd64\.tar\.gz" /tmp/go.html)"
-download_url="https://dl.google.com/go${download_ele:40}"
+download_url="https://dl.google.com/go${download_ele:41}"
 curl -o /tmp/go.tar.gz $download_url
 
 # 配置 go
