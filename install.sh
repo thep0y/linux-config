@@ -2,12 +2,13 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 11:41:43
+# @Last Modified time: 2021-12-31 11:43:58
 
 set -eux
 
 install_cmd=''
 remove_cmd=''
+update_cmd=''
 id=""
 
 # 镜像站默认使用阿里云
@@ -25,32 +26,36 @@ if [ "$ID" = "arch" ]; then
     id=$ID
     install_cmd="sudo pacman -S --noconfirm "
     remove_cmd="sudo pacman -R --noconfirm "
+    update_cmd="sudo pacman -Syy"
     # 配置 pacman 源
-    sudo pacman -Syy
+    $update_cmd
 elif [ "$ID" = "ubuntu" ]; then
     id=$ID
     install_cmd="sudo apt install -y "
     remove_cmd="sudo apt remove -y "
+    update_cmd="sudo apt update"
     # 配置 ubuntu 源
     codename=$VERSION_CODENAME
     sudo sed -i "s/archive.ubuntu.com/$mirrors_url/g" /etc/apt/sources.list
-    sudo apt update
+    $update_cmd
 elif [ "$ID" = "linuxmint" ]; then
     id="ubuntu"
     install_cmd="sudo apt install -y "
     remove_cmd="sudo apt remove -y "
+    update_cmd="sudo apt update"
     # 配置 ubuntu 源
     sudo cp /etc/apt/sources.list.d/official-package-repositories.list /etc/apt/sources.list.d/official-package-repositories.list.bak
     sudo sed -i "s/archive.ubuntu.com/$mirrors_url/g" /etc/apt/sources.list.d/official-package-repositories.list
     codename=$UBUNTU_CODENAME
-    sudo apt update
+    $update_cmd
 elif [ "$ID" = "debian" ]; then
     id=$ID
     install_cmd="sudo apt install -y "
     remove_cmd="sudo apt remove -y "
+    update_cmd="sudo apt update"
     # 配置 debian 源
     codename=$VERSION_CODENAME
-    sudo apt update
+    $update_cmd
 else
     echo '未知发行版'
     exit 1
@@ -179,8 +184,8 @@ else
     echo "此系统${id}尚未配置"
     exit 1
 fi
-sudo apt update
-sudo apt install docker-ce
+$update_cmd
+${install_cmd}docker-ce
 sudo usermod -aG docker $USER
 if [ ! -d "/etc/docker" ]; then
     sudo mkdir -p /etc/docker
