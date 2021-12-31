@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 09:03:45
+# @Last Modified time: 2021-12-31 09:18:09
 
 set -eux
 
@@ -77,18 +77,14 @@ if [ $zsh_is_exists -ne 0 ]; then
     ${install_cmd}zsh
 fi
 
-if [ ! $ZSH_CUSTOM ]; then
+# 解释器为 bash，无法获取 ZSH_CUSTOM 变量，需要折中
+zsh_custom=zsh -c "echo $ZSH_CUSTOM"
+if [ -z "$zsh_custom" ]; then
     sh -c "$(curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git $zsh_custom/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $zsh_custom/plugins/zsh-syntax-highlighting
 fi
 # sed -i "s//$mirrors_url/g" $HOME/.zshrc
-
-
-
-# 安装 oh-my-zsh
-
-# 配置 oh-my-zsh
 
 # 配置 aria2、trojan和坚果云
 
