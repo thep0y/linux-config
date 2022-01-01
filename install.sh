@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2021-12-31 12:53:34
+# @Last Modified time: 2022-01-01 12:40:30
 
 # set -eux
 
@@ -221,6 +221,8 @@ curl -o /tmp/edge.deb $edge_download_url
 sudo dpkg -i /tmp/edge.deb
 
 # 配置 aria2、trojan和坚果云
+
+# 下载、安装、破解 datagrip
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 
