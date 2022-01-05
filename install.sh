@@ -379,7 +379,7 @@ if [ ! -f '/usr/bin/mpv' ]; then
 fi
 
 # 安装 typora
-if [ "$ID" = "arch" ]; then
+if [ ! -f '/usr/bin/typora' ] || [ "$ID" = "arch" ]; then
     # yay -S typora-free # 被墙
     curl -L -o /tmp/typora.deb https://gitee.com/thepoy/linux-configuration-shell/attach_files/934951/download/typora_0.11.18_amd64.deb
     if [ ! -f '/usr/bin/debtap' ]; then
