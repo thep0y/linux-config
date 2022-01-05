@@ -63,6 +63,7 @@ fi
 
 # 检测主目录英文，如果不是英文，则修改为英文
 if [[ $(ls $HOME) =~ "桌面" ]]; then
+    ${install_cmd}xdg-user-dirs
     LC_ALL=C xdg-user-dirs-update --force
     # 更改完如果还有中文目录，则需要删除这些中文目录
     # rm -rf 
@@ -161,8 +162,8 @@ if [ ! -d "/usr/local/go" ]; then
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
     # 配置 go
     echo 'GOROOT=/usr/local/go
-    GOPATH=$HOME/go
-    PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
+GOPATH=$HOME/go
+PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
     # 设置 goproxy
     source .zshenv
     go env -w GO111MODULE=on
@@ -171,13 +172,14 @@ fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
 # ${remove_cmd}docker docker-engine docker.io
-${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
 if [ "$id" = "debian" ]; then
+    ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
     curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
     echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
    $codename \
    stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
 elif [ "$id" = "ubuntu" ]; then
+    ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
     curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
 else
@@ -213,12 +215,22 @@ if [ ! -f "/usr/bin/firefox" ]; then
         ${install_cmd}firefox-esr firefox-esr-l10n-zh-cn
     fi
 fi
-# 用 python 定位最新版的 edge
-edge_html="'''$(curl https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/)'''"
-egde_latest_deb=$(python3 -c "import re;latest=$edge_html.split('\n')[-4];result=re.search(r'href=\"(.*?)\"', latest); print(result.group(1))")
-edge_download_url="https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/$egde_latest_deb"
-curl -o /tmp/edge.deb $edge_download_url
-sudo dpkg -i /tmp/edge.deb
+
+if [ ! -f "microsoft-edge-stable" ]; then
+    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
+        # 用 python 定位最新版的 edge
+        edge_html="'''$(curl https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/)'''"
+        egde_latest_deb=$(python3 -c "import re;latest=$edge_html.split('\n')[-4];result=re.search(r'href=\"(.*?)\"', latest); print(result.group(1))")
+        edge_download_url="https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/$egde_latest_deb"
+        curl -o /tmp/edge.deb $edge_download_url
+        sudo dpkg -i /tmp/edge.deb
+    elif [ "$ID" = "arch" ]; then
+        yay -S microsoft-edge-stable-bin
+    else
+        echo 'unkown platform'
+        exit 1
+    fi
+fi
 
 # 配置 aria2、trojan和坚果云
 
@@ -226,9 +238,30 @@ sudo dpkg -i /tmp/edge.deb
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 
+if [ ! -f "$HOME/.config/sublime-text/Packages/User/Default.sublime-keymap" ]; then
+    curl -o $HOME/.config/sublime-text/Packages/User/Default.sublime-keymap https://gitee.com/thepoy/sublime-text-4-settings/raw/master/key_bindings.json
+fi
+
 # 安装 vscode
 
 # 安装 fcitx5-rime，并下载 98 五笔码表和皮肤
+if [ ! -f "/usr/bin/fcitx5" ]; then
+    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
+        echo 'not support'
+    elif [ "$ID" = "arch" ]; then
+        sudo pacman -S fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt
+
+    else
+        echo 'unkown platform'
+        exit 1
+    fi
+    cp /usr/share/applications/org.fcitx.Fcitx5.desktop $HOME/.config/autostart
+fi
+
+if [ ! -d "$HOME/.config/environment.d" ]; then
+    mkdir -p $HOME/.config/environment.d
+fi
+
 
 # 安装 libreoffice 套件，指定 gtk3 依赖
 
