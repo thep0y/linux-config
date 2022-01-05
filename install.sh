@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-01-05 20:01:30
+# @Last Modified time: 2022-01-05 20:02:12
 
 # set -ex
 
@@ -389,7 +389,6 @@ echo '{
     "tab_size": 4,
     "font_size": 11,
     "word_wrap": true,
-    "color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
     "lsp_format_on_save": true
 }
 ' > $HOME/.config/sublime-text/Packages/User/Preferences.sublime-settings
