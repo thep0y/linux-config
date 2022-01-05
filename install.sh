@@ -285,7 +285,13 @@ Name[zh_CN]=trojan
 Comment[zh_CN]=No description
 X-GNOME-Autostart-Delay=5" >  $HOME/.config/autostart/trojan.desktop
 fi
-
+if [ "$ID" = "arch" ]; then
+    yay -S nutstore-experimental
+else
+    curl -o /tmp/nutstore.tar.gz https://www.jianguoyun.com/static/exe/installer/nutstore_linux_dist_x64.tar.gz
+    mkdir -p $HOME/Applications/nutstore && tar zxf /tmp/nutstore.tar.gz -C $HOME/Applications/nutstor
+    bash $HOME/Applications/nutstor/bin/install_core.sh
+fi
 
 
 # 下载、安装、破解 datagrip
