@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-01-05 20:03:48
+# @Last Modified time: 2022-01-05 20:09:12
 
 # set -ex
 
@@ -412,7 +412,14 @@ curl -o $HOME/.config/sublime-text/Packages/User/snippets/fmain.sublime-snippet 
 curl -o $HOME/.config/sublime-text/Packages/User/snippets/func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/func.sublime-snippet
 curl -o $HOME/.config/sublime-text/Packages/User/snippets/struct_func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/struct_func.sublime-snippet
 
-# 安装 vscode
+# 安装 vscode。vscode 的 go 提示比 st 丰富，能帮助写出更完美的代码风格
+if [ ! -f '/usr/bin/code' ]; then
+    if [ "$ID" = "arch" ]; then
+        ${install_cmd}code
+    else
+        echo "此发行版 [$ID] 待完善"
+    fi
+fi
 
 # 安装 fcitx5-rime，并下载 98 五笔码表和皮肤
 if [ ! -f "/usr/bin/fcitx5" ]; then
