@@ -182,6 +182,8 @@ elif [ "$id" = "ubuntu" ]; then
     ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
     curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
+elif [ "$ID" = "arch" ]; then
+    echo 'arch'
 else
     echo "此系统${id}尚未配置"
     exit 1
