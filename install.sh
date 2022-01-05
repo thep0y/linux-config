@@ -178,18 +178,21 @@ if [ "$id" = "debian" ]; then
     echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
    $codename \
    stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
+    $update_cmd
+    ${install_cmd}docker-ce
 elif [ "$id" = "ubuntu" ]; then
     ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
     curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
+    $update_cmd
+    ${install_cmd}docker-ce
 elif [ "$ID" = "arch" ]; then
     echo 'arch不需额外配置'
+    ${install_cmd}docker
 else
     echo "此系统${id}尚未配置"
     exit 1
 fi
-$update_cmd
-${install_cmd}docker-ce
 sudo usermod -aG docker $USER
 if [ ! -d "/etc/docker" ]; then
     sudo mkdir -p /etc/docker
