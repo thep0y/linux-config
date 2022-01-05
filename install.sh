@@ -221,7 +221,7 @@ if [ ! -f "/usr/bin/firefox" ]; then
     fi
 fi
 
-if [ ! -f "microsoft-edge-stable" ]; then
+if [ ! -f "/usr/bin/microsoft-edge-stable" ]; then
     if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
         # 用 python 定位最新版的 edge
         edge_html="'''$(curl https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/)'''"
