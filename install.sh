@@ -377,7 +377,7 @@ fi
 # 安装 typora
 if [ "$ID" = "arch" ]; then
     # yay -S typora-free # 被墙
-    curl -o -L /tmp/typora.deb https://gitee.com/thepoy/linux-configuration-shell/attach_files/934951/download/typora_0.11.18_amd64.deb
+    curl -L -o /tmp/typora.deb https://gitee.com/thepoy/linux-configuration-shell/attach_files/934951/download/typora_0.11.18_amd64.deb
     yay -S debtap
     sudo debtap -u
     debtap /tmp/typora.deb
