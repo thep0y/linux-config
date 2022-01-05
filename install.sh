@@ -79,7 +79,7 @@ if [ $git_is_exists -ne 0 ]; then
 fi
 git config --global url."https://github.com.cnpmjs.org".insteadOf "https://github.com"
 # github.com.cnpmjs.org 的证书可能无法验证，更新证书
-sudo update-ca-certificates
+# sudo update-ca-certificates
 
 # 检测 vim 是否存在，不存在则安装，存在则配置
 vim_is_exists=0
@@ -288,16 +288,20 @@ Name[zh_CN]=trojan
 Comment[zh_CN]=No description
 X-GNOME-Autostart-Delay=5" >  $HOME/.config/autostart/trojan.desktop
 fi
-if [ "$ID" = "arch" ]; then
-    yay -S nutstore-experimental
-else
-    curl -o /tmp/nutstore.tar.gz https://www.jianguoyun.com/static/exe/installer/nutstore_linux_dist_x64.tar.gz
-    mkdir -p $HOME/Applications/nutstore && tar zxf /tmp/nutstore.tar.gz -C $HOME/Applications/nutstor
-    bash $HOME/Applications/nutstor/bin/install_core.sh
+if [ ! -f '/usr/bin/nutstore' ] && [ ! -d "$HOME/Applications/nutstore" ]; then
+    if [ "$ID" = "arch" ]; then
+        yay -S nutstore-experimental
+    else
+        curl -o /tmp/nutstore.tar.gz https://www.jianguoyun.com/static/exe/installer/nutstore_linux_dist_x64.tar.gz
+        mkdir -p $HOME/Applications/nutstore && tar zxf /tmp/nutstore.tar.gz -C $HOME/Applications/nutstor
+        bash $HOME/Applications/nutstor/bin/install_core.sh
+    fi
 fi
 
 
 # 下载、安装、破解 datagrip
+_datagrip_latest_query=$(curl https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698)
+python3 -c "print($_datagrip_latest_query['DG'][0]['downloads']['linux']['link'])"
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 # 因为破解脚本跟随开发版本更新，所以无法一键破解
