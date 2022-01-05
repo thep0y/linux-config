@@ -300,7 +300,8 @@ fi
 
 
 # 下载、安装、破解 datagrip
-_datagrip_latest_query=$(curl https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698)
+_datagrip_latest_query="$(curl https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698)"
+echo $_datagrip_latest_query
 # python3 -c "print($_datagrip_latest_query['DG'][0]['downloads']['linux']['link'])"
 python3 -c "print($_datagrip_latest_query)"
 
