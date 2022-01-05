@@ -300,10 +300,18 @@ fi
 
 
 # 下载、安装、破解 datagrip
-curl -o /tmp/datagrip 'https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698'
-echo "$(grep -Eo 'https://.*?\.tar\.gz","size":' /tmp/datagrip)" > /tmp/datagrip
-latest_url="$(grep -Eo 'https://.*?\.tar\.gz' /tmp/datagrip)"
-echo $latest_url
+if [ ! -f '/usr/bin/datagrip' ] && [ ! -d "$HOME/Applications/datagrip" ]; then
+    if [ "$ID" = "arch" ]; then
+        yay -S datagrip
+    else
+        curl -o /tmp/datagrip 'https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698'
+        echo "$(grep -Eo 'https://.*?\.tar\.gz","size":' /tmp/datagrip)" > /tmp/datagrip
+        latest_url="$(grep -Eo 'https://.*?\.tar\.gz' /tmp/datagrip)"
+        curl -o /tmp/datagrip.tar.gz $latest_url
+        tar -zxf /tmp/datagrip.tar.gz -C $HOME/Applications
+        mv $HOME/Applications/DataGrip* $HOME/Applications/datagrip
+    fi
+fi
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 # 因为破解脚本跟随开发版本更新，所以无法一键破解
