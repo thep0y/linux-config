@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-01-01 12:40:30
+# @Last Modified time: 2022-01-05 19:57:37
 
 # set -ex
 
@@ -156,6 +156,7 @@ if [[ ! $($conda_cmd env list) =~ 'work' ]]; then
     $conda_cmd create -n work python=3.9
 
     # 激活 work 环境，并安装常用包
+    # zsh 安装的 conda，在 bash 会话里无法正常运行 activate，所以只创建，之后手动安装依赖
     # $conda_cmd activate work
     # pip install requests pymysql mongo
 fi
@@ -335,6 +336,84 @@ fi
 if [ ! -f "$HOME/.config/sublime-text/Packages/User/Default.sublime-keymap" ]; then
     curl -o $HOME/.config/sublime-text/Packages/User/Default.sublime-keymap https://gitee.com/thepoy/sublime-text-4-settings/raw/master/key_bindings.json
 fi
+echo '[
+    {
+        "button": "button2",
+        "count": 1,
+        "modifiers": [
+            "ctrl"
+        ],
+        "command": "jump_back"
+    },
+    {
+        "button": "button1",
+        "count": 1,
+        "modifiers": [
+            "ctrl"
+        ],
+        "press_command": "drag_select",
+        "command": "goto_definition"
+    },
+    // LSP: Go To Definition
+    {
+        "button": "button1",
+        "count": 1,
+        "modifiers": [
+            "ctrl"
+        ],
+        "press_command": "drag_select",
+        "command": "lsp_symbol_definition",
+        "args": {
+            "side_by_side": false
+        },
+        "context": [
+            {
+                "key": "lsp.session_with_capability",
+                "operator": "equal",
+                "operand": "definitionProvider"
+            },
+            {
+                "key": "auto_complete_visible",
+                "operator": "equal",
+                "operand": false
+            }
+        ]
+    }
+]' > $HOME/.config/sublime-text/Packages/User/Default.sublime-mousemap
+echo '{
+    "ignored_packages":
+    [
+        "Vintage",
+    ],
+    "translate_tabs_to_spaces": true,
+    "tab_size": 4,
+    "font_size": 11,
+    "word_wrap": true,
+    "color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
+    "lsp_format_on_save": true
+}
+' > $HOME/.config/sublime-text/Packages/User/Preferences.sublime-settings
+echo '// Settings in here override those in "LSP-pyright/LSP-pyright.sublime-settings"
+{
+    "settings": {
+        "python.venvPath": "/home/thepoy/miniconda3/envs"
+    }
+}' > $HOME/.config/sublime-text/Packages/User/LSP-pyright.sublime-settings
+echo '{
+    "Default": {
+        "author": "thepoy",
+        "email": "thepoy@aliyun.com"
+    }
+}' > $HOME/.config/sublime-text/Packages/User/FileHeader.sublime-settings
+if [ ! -d "$HOME/.config/sublime-text/Packages/User/snippets" ]; then
+    mkdir $HOME/.config/sublime-text/Packages/User/snippets
+fi
+curl -o $HOME/.config/sublime-text/Packages/User/snippets/finit.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/finit.sublime-snippet
+curl -o $HOME/.config/sublime-text/Packages/User/snippets/
+fmain.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/
+fmain.sublime-snippet
+curl -o $HOME/.config/sublime-text/Packages/User/snippets/func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/func.sublime-snippet
+curl -o $HOME/.config/sublime-text/Packages/User/snippets/struct_func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/struct_func.sublime-snippet
 
 # 安装 vscode
 
