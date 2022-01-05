@@ -29,6 +29,8 @@ if [ "$ID" = "arch" ]; then
     update_cmd="sudo pacman -Syy"
     # 配置 pacman 源
     $update_cmd
+    ${install_cmd}yay
+    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 elif [ "$ID" = "ubuntu" ]; then
     id=$ID
     install_cmd="sudo apt install -y "
@@ -149,8 +151,8 @@ if [[ ! $($conda_cmd env list) =~ 'work' ]]; then
     $conda_cmd create -n work python=3.9
 
     # 激活 work 环境，并安装常用包
-    $conda_cmd activate work
-    pip install requests pymysql mongo
+    # $conda_cmd activate work
+    # pip install requests pymysql mongo
 fi
 
 # 下载并安装 go
@@ -239,12 +241,70 @@ if [ ! -f "/usr/bin/microsoft-edge-stable" ]; then
 fi
 
 # 配置 aria2、trojan和坚果云
+if [ ! -f "/usr/bin/aria2c" ]; then
+    ${install_cmd}aria2
+fi
+if [ ! -d "$HOME/.config/autostart" ]; then
+    mkdir "$HOME/.config/autostart"
+fi
+if [ ! -d "$HOME/Applications" ]; then
+    mkdir -p "$HOME/Applications/aria2"
+    ln -s "$HOME/Applications/aria2" $HOME/.aria2c
+    git clone https://github.com/P3TERX/aria2.conf.git $HOME/Applications/aria2
+    sed -i "s/\/root\//\/$HOME\//g" $HOME/Applications/aria2/aria2.conf
+    sed -i "s/\/root\//\/$HOME\//g" $HOME/Applications/aria2/script.conf
+    echo '#!/bin/sh
+
+nohup aria2c --conf-path=$HOME/.aria2c/aria2.conf > /dev/null 2>&1 &' > $HOME/Applications/aria2/aria2.sh
+    echo "[Desktop Entry]
+Type=Application
+Exec=$HOME/Applications/aria2/aria2.sh
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[zh_CN]=aria2
+Comment[zh_CN]=No description
+X-GNOME-Autostart-Delay=15" >  $HOME/.config/autostart/aria2.desktop
+fi
+if [ ! -d "$HOME/Applications/trojan" ]; then
+    curl -o /tmp/trojan.tar.xz https://hub.fastgit.org/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+    echo '#!/bin/sh
+
+TROJAN_PATH=$HOME/Applications/trojan
+nohup $TROJAN_PATH/trojan -c $TROJAN_PATH/config.json > $TROJAN_PATH/trojan.log 2>&1 &
+' > $HOME/Applications/trojan/trojan.sh
+    tar -xf /tmp/trojan.tar.xz -C "$HOME/Applications"
+    echo '别忘了配置 trojan 的地址、端口和密码！'
+    echo "[Desktop Entry]
+Type=Application
+Exec=$HOME/Applications/trojan/trojan.sh
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[zh_CN]=trojan
+Comment[zh_CN]=No description
+X-GNOME-Autostart-Delay=5" >  $HOME/.config/autostart/trojan.desktop
+fi
+
 
 
 # 下载、安装、破解 datagrip
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
-
+if [ ! -f '/usr/bin/subl' ]; then
+    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
+        wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+        sudo apt-get install apt-transport-https
+        echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+        sudo apt-get update
+        sudo apt-get install sublime-text sublime-merge
+    elif [ "$ID" = "arch" ]; then
+        yay -S sublime-text-4 sublime-merge
+    else
+        echo 'unkown platform'
+        exit 1
+    fi
+fi
 if [ ! -f "$HOME/.config/sublime-text/Packages/User/Default.sublime-keymap" ]; then
     curl -o $HOME/.config/sublime-text/Packages/User/Default.sublime-keymap https://gitee.com/thepoy/sublime-text-4-settings/raw/master/key_bindings.json
 fi
@@ -254,21 +314,23 @@ fi
 # 安装 fcitx5-rime，并下载 98 五笔码表和皮肤
 if [ ! -f "/usr/bin/fcitx5" ]; then
     if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
-        echo 'not support'
+        ${install_cmd}fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt
     elif [ "$ID" = "arch" ]; then
-        sudo pacman -S fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt
-
+        ${install_cmd}fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt
     else
         echo 'unkown platform'
         exit 1
     fi
     cp /usr/share/applications/org.fcitx.Fcitx5.desktop $HOME/.config/autostart
+    echo 'GTK_IM_MODULE=fcitx
+    QT_IM_MODULE=fcitx
+    XMODIFIERS=@im=fcitx
+    ' | sudo tee -a /etc/environment
 fi
 
 if [ ! -d "$HOME/.config/environment.d" ]; then
     mkdir -p $HOME/.config/environment.d
 fi
-
 
 # 安装 libreoffice 套件，指定 gtk3 依赖
 
