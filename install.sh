@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-01-05 20:02:12
+# @Last Modified time: 2022-01-05 20:03:48
 
 # set -ex
 
@@ -464,9 +464,9 @@ if [ ! -f '/usr/bin/typora' ] && [ "$ID" = "arch" ]; then
     curl -L -o /tmp/typora.deb https://gitee.com/thepoy/linux-configuration-shell/attach_files/934951/download/typora_0.11.18_amd64.deb
     if [ ! -f '/usr/bin/debtap' ]; then
         yay -S debtap
-        sudo sed -i "s/ftp.debian.org/mirrors.ustc.edu.cn/g" /usr/bin/debtap
-        sudo sed -i "s/ports.ubuntu.com/mirrors.ustc.edu.cn/g" /usr/bin/debtap
-        sudo sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /usr/bin/debtap
+        sudo sed -i "s/ftp.debian.org/$mirrors_url/g" /usr/bin/debtap
+        sudo sed -i "s/ports.ubuntu.com/$mirrors_url/g" /usr/bin/debtap
+        sudo sed -i "s/archive.ubuntu.com/$mirrors_url/g" /usr/bin/debtap
         sudo sed -i "s/github.com/hub.fastgit.org/g" /usr/bin/debtap
         sudo sed -i "s/aur.archlinux.org/aur.tuna.tsinghua.edu.cn/g" /usr/bin/debtap
         sudo debtap -u
