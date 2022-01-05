@@ -376,6 +376,11 @@ if [ ! -f '/usr/bin/mpv' ]; then
         echo "此发行版 [$ID] 待完善"
     fi
 fi
+if [ ! -d "$HOME/.config/mpv" ]; then
+    mkdir $HOME/.config/mpv
+fi
+curl -o mkdir $HOME/.config/mpv/input.conf https://raw.fastgit.org/thep0y/mpv-config/master/input.conf
+curl -o mkdir $HOME/.config/mpv/mpv.conf https://raw.fastgit.org/thep0y/mpv-config/master/mpv.conf
 
 # 安装 typora
 if [ ! -f '/usr/bin/typora' ] && [ "$ID" = "arch" ]; then
