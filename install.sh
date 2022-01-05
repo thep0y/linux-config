@@ -357,5 +357,31 @@ if [ ! -d "$HOME/.config/environment.d" ]; then
 fi
 
 # 安装 libreoffice 套件，指定 gtk3 依赖
+if [ ! -f '/usr/bin/libreoffice' ]; then
+    if [ "$ID" = "arch" ]; then
+        ${install_cmd}libreoffice-still-zh-cn
+    else
+        echo "此发行版 [$ID] 待完善"
+    fi
+fi
 
 # 安装 mpv
+if [ ! -f '/usr/bin/mpv' ]; then
+    if [ "$ID" = "arch" ]; then
+        ${install_cmd}mpv
+    else
+        echo "此发行版 [$ID] 待完善"
+    fi
+fi
+
+# 安装 typora
+if [ "$ID" = "arch" ]; then
+    yay -S typora-free
+else
+    echo "此发行版 [$ID] 待完善"
+fi
+if [ -d "$HOME/.config/Typora" ]; then
+    curl -o $HOME/.config/Typora/drake-ayu.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-ayu.css
+    curl -o $HOME/.config/Typora/drake-vue.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-vue.css
+    curl -o $HOME/.config/Typora/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
+fi
