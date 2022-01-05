@@ -183,7 +183,7 @@ elif [ "$id" = "ubuntu" ]; then
     curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
 elif [ "$ID" = "arch" ]; then
-    echo 'arch'
+    echo 'arch不需额外配置'
 else
     echo "此系统${id}尚未配置"
     exit 1
