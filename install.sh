@@ -176,6 +176,7 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
     source .zshenv
     go env -w GO111MODULE=on
     go env -w GOPROXY=https://goproxy.cn,direct
+    go install github.com/thep0y/go-up2b@latest
 fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
