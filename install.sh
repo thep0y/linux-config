@@ -86,8 +86,11 @@ vim_is_exists=0
 command -v vim >/dev/null 2>&1 || { vim_is_exists=1; }
 if [ $vim_is_exists -ne 0 ]; then
     ${install_cmd}vim
-    # TODO: 下面两行的目录和文件应该判断是否存在
+fi
+if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
     git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+fi
+if [ ! -f "$HOME/.vimrc" ]; then
     curl -o $HOME/.vimrc https://raw.fastgit.org/thep0y/vim/master/.vimrc
 fi
 
@@ -297,6 +300,7 @@ fi
 # 下载、安装、破解 datagrip
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
+# 因为破解脚本跟随开发版本更新，所以无法一键破解
 if [ ! -f '/usr/bin/subl' ]; then
     if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
         wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
