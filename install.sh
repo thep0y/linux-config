@@ -117,24 +117,24 @@ fi
 # 安装 conda
 conda_folder=$HOME/miniconda3
 if [ ! -d $conda_folder ]; then
-    curl -o /tmp/minicode.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    zsh /tmp/minicode.sh
+    curl -o /tmp/miniconda.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    zsh /tmp/miniconda.sh
     # 配置 conda
     echo 'channels:
-      - defaults
-    show_channel_urls: true
-    default_channels:
-      - https://mirrors.bfsu.edu.cn/anaconda/pkgs/main
-      - https://mirrors.bfsu.edu.cn/anaconda/pkgs/r
-      - https://mirrors.bfsu.edu.cn/anaconda/pkgs/msys2
-    custom_channels:
-      conda-forge: https://mirrors.bfsu.edu.cn/anaconda/cloud
-      msys2: https://mirrors.bfsu.edu.cn/anaconda/cloud
-      bioconda: https://mirrors.bfsu.edu.cn/anaconda/cloud
-      menpo: https://mirrors.bfsu.edu.cn/anaconda/cloud
-      pytorch: https://mirrors.bfsu.edu.cn/anaconda/cloud
-      pytorch-lts: https://mirrors.bfsu.edu.cn/anaconda/cloud
-      simpleitk: https://mirrors.bfsu.edu.cn/anaconda/cloud' > $HOME/.condarc
+  - defaults
+show_channel_urls: true
+default_channels:
+  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/main
+  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/r
+  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.bfsu.edu.cn/anaconda/cloud
+  msys2: https://mirrors.bfsu.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.bfsu.edu.cn/anaconda/cloud
+  menpo: https://mirrors.bfsu.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.bfsu.edu.cn/anaconda/cloud
+  pytorch-lts: https://mirrors.bfsu.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.bfsu.edu.cn/anaconda/cloud' > $HOME/.condarc
 fi
 
 
@@ -145,7 +145,7 @@ fi
 
 conda_cmd=$HOME/miniconda3/bin/conda
 # 创建 work 环境
-if [[ $($conda_cmd env list) =~ 'work' ]]; then
+if [[ ! $($conda_cmd env list) =~ 'work' ]]; then
     $conda_cmd create -n work python=3.9
 
     # 激活 work 环境，并安装常用包
@@ -171,40 +171,41 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
 fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
-# ${remove_cmd}docker docker-engine docker.io
-if [ "$id" = "debian" ]; then
-    ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
-    curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
-    echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
-   $codename \
-   stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
-    $update_cmd
-    ${install_cmd}docker-ce
-elif [ "$id" = "ubuntu" ]; then
-    ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
-    curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
-    $update_cmd
-    ${install_cmd}docker-ce
-elif [ "$ID" = "arch" ]; then
-    echo 'arch不需额外配置'
-    ${install_cmd}docker
-else
-    echo "此系统${id}尚未配置"
-    exit 1
+if [ ! -f '/usr/bin/docker' ]; then
+    if [ "$id" = "debian" ]; then
+        ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
+        curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
+        echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
+       $codename \
+       stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
+        $update_cmd
+        ${install_cmd}docker-ce
+    elif [ "$id" = "ubuntu" ]; then
+        ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
+        curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
+        $update_cmd
+        ${install_cmd}docker-ce
+    elif [ "$ID" = "arch" ]; then
+        echo 'arch不需额外配置'
+        ${install_cmd}docker
+    else
+        echo "此系统${id}尚未配置"
+        exit 1
+    fi
+    sudo usermod -aG docker $USER
+    if [ ! -d "/etc/docker" ]; then
+        sudo mkdir -p /etc/docker
+    fi
+    if [ ! -f '/etc/docker/daemon.json' ]; then
+        echo '{
+        "registry-mirrors": ["https://mci3f39b.mirror.aliyuncs.com"]
+    }' | sudo tee -a /etc/docker/daemon.json
+    fi
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
+    sudo usermod -aG docker $USER
 fi
-sudo usermod -aG docker $USER
-if [ ! -d "/etc/docker" ]; then
-    sudo mkdir -p /etc/docker
-fi
-if [ ! -f '/etc/docker/daemon.json' ]; then
-    echo '{
-    "registry-mirrors": ["https://mci3f39b.mirror.aliyuncs.com"]
-}' | sudo tee -a /etc/docker/daemon.json
-fi
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-sudo usermod -aG docker $USER
 
 # 安装浏览器，edge 和 firefox
 if [ ! -f "/usr/bin/firefox" ]; then
@@ -238,6 +239,7 @@ if [ ! -f "/usr/bin/microsoft-edge-stable" ]; then
 fi
 
 # 配置 aria2、trojan和坚果云
+
 
 # 下载、安装、破解 datagrip
 
