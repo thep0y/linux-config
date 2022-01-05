@@ -401,3 +401,9 @@ if [ -d "$HOME/.config/Typora" ]; then
     curl -o $HOME/.config/Typora/themes/drake-vue.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-vue.css
     curl -o $HOME/.config/Typora/themes/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
 fi
+
+# 直播解析
+if [ ! -d "$HOME/Development/python" ]; then
+    mkdir -p $HOME/Development/python
+fi
+curl -o $HOME/Development/python/douyu.py https://raw.fastgit.org/wbt5/real-url/master/douyu.py
