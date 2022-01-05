@@ -397,7 +397,7 @@ else
     echo "此发行版 [$ID] 待完善"
 fi
 if [ -d "$HOME/.config/Typora" ]; then
-    curl -o $HOME/.config/Typora/drake-ayu.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-ayu.css
-    curl -o $HOME/.config/Typora/drake-vue.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-vue.css
-    curl -o $HOME/.config/Typora/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
+    curl -o $HOME/.config/Typora/themes/drake-ayu.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-ayu.css
+    curl -o $HOME/.config/Typora/themes/drake-vue.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-vue.css
+    curl -o $HOME/.config/Typora/themes/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
 fi
