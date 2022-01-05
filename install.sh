@@ -5,7 +5,7 @@
 # @Last Modified time: 2022-01-01 12:40:30
 
 #set -eux
-set -ux
+set -ex
 
 install_cmd=''
 remove_cmd=''
