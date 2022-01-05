@@ -29,7 +29,9 @@ if [ "$ID" = "arch" ]; then
     update_cmd="sudo pacman -Syy"
     # 配置 pacman 源
     $update_cmd
-    ${install_cmd}yay
+    if [ ! -f '/usr/bin/yay' ]; then
+        ${install_cmd}yay
+    fi
     yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 elif [ "$ID" = "ubuntu" ]; then
     id=$ID
