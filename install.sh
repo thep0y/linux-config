@@ -300,8 +300,9 @@ fi
 
 
 # 下载、安装、破解 datagrip
-curl -o /tmp/datagrip https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698
-latest_url="$(grep -Eo 'https://.*?\.tar\.gz","size":' /tmp/datagrip)"
+curl -o /tmp/datagrip 'https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release&build=&_=1641367114698'
+echo "$(grep -Eo 'https://.*?\.tar\.gz","size":' /tmp/datagrip)" > /tmp/datagrip
+latest_url="$(grep -Eo 'https://.*?\.tar\.gz' /tmp/datagrip)"
 echo $latest_url
 
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
