@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-01-05 19:57:37
+# @Last Modified time: 2022-01-05 20:01:30
 
 # set -ex
 
@@ -409,9 +409,7 @@ if [ ! -d "$HOME/.config/sublime-text/Packages/User/snippets" ]; then
     mkdir $HOME/.config/sublime-text/Packages/User/snippets
 fi
 curl -o $HOME/.config/sublime-text/Packages/User/snippets/finit.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/finit.sublime-snippet
-curl -o $HOME/.config/sublime-text/Packages/User/snippets/
-fmain.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/
-fmain.sublime-snippet
+curl -o $HOME/.config/sublime-text/Packages/User/snippets/fmain.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/fmain.sublime-snippet
 curl -o $HOME/.config/sublime-text/Packages/User/snippets/func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/func.sublime-snippet
 curl -o $HOME/.config/sublime-text/Packages/User/snippets/struct_func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/struct_func.sublime-snippet
 
