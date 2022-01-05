@@ -380,13 +380,15 @@ fi
 if [ "$ID" = "arch" ]; then
     # yay -S typora-free # 被墙
     curl -L -o /tmp/typora.deb https://gitee.com/thepoy/linux-configuration-shell/attach_files/934951/download/typora_0.11.18_amd64.deb
-    yay -S debtap
-    sudo sed -i "s/ftp.debian.org/mirrors.ustc.edu.cn/g" /usr/bin/debtap
-    sudo sed -i "s/ports.ubuntu.com/mirrors.ustc.edu.cn/g" /usr/bin/debtap
-    sudo sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /usr/bin/debtap
-    sudo sed -i "s/github.com/hub.fastgit.org/g" /usr/bin/debtap
-    sudo sed -i "s/aur.archlinux.org/aur.tuna.tsinghua.edu.cn/g" /usr/bin/debtap
-    sudo debtap -u
+    if [ ! -f '/usr/bin/debtap' ]; then
+        yay -S debtap
+        sudo sed -i "s/ftp.debian.org/mirrors.ustc.edu.cn/g" /usr/bin/debtap
+        sudo sed -i "s/ports.ubuntu.com/mirrors.ustc.edu.cn/g" /usr/bin/debtap
+        sudo sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /usr/bin/debtap
+        sudo sed -i "s/github.com/hub.fastgit.org/g" /usr/bin/debtap
+        sudo sed -i "s/aur.archlinux.org/aur.tuna.tsinghua.edu.cn/g" /usr/bin/debtap
+        sudo debtap -u
+    fi
     debtap /tmp/typora.deb
     sudo pacman -U /tmp/typora-0.11.18-1-x86_64.pkg.tar.zst
 else
