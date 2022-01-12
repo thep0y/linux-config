@@ -274,7 +274,7 @@ Comment[zh_CN]=No description
 X-GNOME-Autostart-Delay=15" >  $HOME/.config/autostart/aria2.desktop
 fi
 if [ ! -d "$HOME/Applications/trojan" ]; then
-    curl -o /tmp/trojan.tar.xz https://hub.fastgit.org/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+    curl -L -o /tmp/trojan.tar.xz https://hub.fastgit.org/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
     echo '#!/bin/sh
 
 TROJAN_PATH=$HOME/Applications/trojan
