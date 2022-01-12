@@ -26,6 +26,15 @@ if [ "$ID" = "arch" ]; then
     id=$ID
     install_cmd="sudo pacman -S --noconfirm "
     remove_cmd="sudo pacman -R --noconfirm "
+
+    archlinuxcn="$(tail -n 1 /etc/pacman.conf)"
+    if [ "$archlinuxcn" != "Server = https://mirrors.aliyun.com/archlinuxcn/$arch" ]; then
+        echo '[archlinuxcn]
+Server = https://mirrors.aliyun.com/archlinuxcn/$arch' | sudo tee -a /etc/pacman.conf
+        sudo pacman -Sy
+        sudo pacman -S archlinuxcn-keyring
+    fi
+
     update_cmd="sudo pacman -Syy"
     # 配置 pacman 源
     $update_cmd
@@ -70,7 +79,7 @@ if [[ $(ls $HOME) =~ "桌面" ]]; then
     ${install_cmd}xdg-user-dirs
     LC_ALL=C xdg-user-dirs-update --force
     # 更改完如果还有中文目录，则需要删除这些中文目录
-    # rm -rf 
+    rm -rf 下载 图片 桌面 视频 公共 文档 模板 音乐
 fi
 
 # 检测 git 是否存在，不存在则安装，存在则配置 git 代理
