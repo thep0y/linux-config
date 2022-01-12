@@ -442,8 +442,8 @@ if [ ! -f "/usr/bin/fcitx5" ]; then
     fi
     cp /usr/share/applications/org.fcitx.Fcitx5.desktop $HOME/.config/autostart
     echo 'GTK_IM_MODULE=fcitx
-    QT_IM_MODULE=fcitx
-    XMODIFIERS=@im=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
     ' | sudo tee -a /etc/environment
 fi
 
