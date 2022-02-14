@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-01-05 20:09:12
+# @Last Modified time: 2022-02-14 11:09:06
 
 # set -ex
 
@@ -28,7 +28,7 @@ if [ "$ID" = "arch" ]; then
     remove_cmd="sudo pacman -R --noconfirm "
 
     archlinuxcn="$(tail -n 1 /etc/pacman.conf)"
-    if [ "$archlinuxcn" != "Server = https://mirrors.aliyun.com/archlinuxcn/$arch" ]; then
+    if [ "$archlinuxcn" != 'Server = https://mirrors.aliyun.com/archlinuxcn/$arch' ]; then
         echo '[archlinuxcn]
 Server = https://mirrors.aliyun.com/archlinuxcn/$arch' | sudo tee -a /etc/pacman.conf
         sudo pacman -Sy
@@ -41,7 +41,6 @@ Server = https://mirrors.aliyun.com/archlinuxcn/$arch' | sudo tee -a /etc/pacman
     if [ ! -f '/usr/bin/yay' ]; then
         ${install_cmd}yay
     fi
-    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 elif [ "$ID" = "ubuntu" ]; then
     id=$ID
     install_cmd="sudo apt install -y "
@@ -69,6 +68,17 @@ elif [ "$ID" = "debian" ]; then
     # 配置 debian 源
     codename=$VERSION_CODENAME
     $update_cmd
+elif [ "$ID" = "Deepin" ]; then
+    id=$ID
+    install_cmd="sudo apt install -y "
+    remove_cmd="sudo apt remove -y "
+    update_cmd="sudo apt update"
+    # 配置 debian 源
+    if [ "$VERSION_CODENAME" != "apricot" ]; then
+        echo "${VERSION_CODENAME} 为未知版本，deepin 可能已经更新了大版本，此脚本需要更新"
+    fi
+    codename="buster"
+    $update_cmd
 else
     echo '未知发行版'
     exit 1
@@ -88,7 +98,7 @@ command -v git >/dev/null 2>&1 || { git_is_exists=1; }
 if [ $git_is_exists -ne 0 ]; then
     ${install_cmd}git
 fi
-git config --global url."https://github.com.cnpmjs.org".insteadOf "https://github.com"
+git config --global url."https://hub.fastgit.xyz/".insteadOf "https://github.com/"
 # github.com.cnpmjs.org 的证书可能无法验证，更新证书
 # sudo update-ca-certificates
 
@@ -180,9 +190,9 @@ if [ ! -d "/usr/local/go" ]; then
     # 配置 go
     echo 'GOROOT=/usr/local/go
 GOPATH=$HOME/go
-PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> .zshenv
+PATH=$GOROOT/bin:$GOPATH/bin:$PATH' | sudo tee -a /etc/zsh/zshenv
     # 设置 goproxy
-    source .zshenv
+    source /etc/zsh/zshenv
     go env -w GO111MODULE=on
     go env -w GOPROXY=https://goproxy.cn,direct
     go install github.com/thep0y/go-up2b@latest
@@ -190,7 +200,7 @@ fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
 if [ ! -f '/usr/bin/docker' ]; then
-    if [ "$id" = "debian" ]; then
+    if [ "$id" = "debian" ] || [ "$id" = "Deepin" ]; then
         ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
         curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
         echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
@@ -232,11 +242,11 @@ if [ ! -f "/usr/bin/firefox" ]; then
         if [ ! -d "$HOME/Applications" ]; then
             mkdir -p $HOME/Applications
         fi
-        curl -L -o /tmp/firefox-esr.tar.bz2 "https://download.mozilla.org/?product=firefox-esr-latest&os=linux&lang=zh-CN"
+        curl -L -o /tmp/firefox-esr.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux&lang=zh-CN"
         tar -xf /tmp/firefox-esr.tar.bz2 -C $HOME/Applicationswhre
     elif [ "$id" = "debian" ]; then
         # 只支持 debian 11 以上，我本人不会使用 11 以下的 debian，包括 deepin
-        ${install_cmd}firefox-esr firefox-esr-l10n-zh-cn
+        ${install_cmd}firefox firefox-l10n-zh-cn
     fi
 fi
 
@@ -265,13 +275,19 @@ if [ ! -d "$HOME/.config/autostart" ]; then
 fi
 if [ ! -d "$HOME/Applications" ]; then
     mkdir -p "$HOME/Applications/aria2"
-    ln -s "$HOME/Applications/aria2" $HOME/.aria2c
+    ln -s "$HOME/Applications/aria2" $HOME/.aria2
     git clone https://github.com/P3TERX/aria2.conf.git $HOME/Applications/aria2
-    sed -i "s/\/root\//\/$HOME\//g" $HOME/Applications/aria2/aria2.conf
-    sed -i "s/\/root\//\/$HOME\//g" $HOME/Applications/aria2/script.conf
+    sed -i "s#/root/#$HOME/#g" $HOME/Applications/aria2/aria2.conf
+    sed -i "s#/root/#$HOME/#g" $HOME/Applications/aria2/script.conf
     echo '#!/bin/sh
 
-nohup aria2c --conf-path=$HOME/.aria2c/aria2.conf > /dev/null 2>&1 &' > $HOME/Applications/aria2/aria2.sh
+nohup aria2c --conf-path=$HOME/.aria2/aria2.conf > /dev/null 2>&1 &' > $HOME/Applications/aria2/aria2.sh
+    chmod +x $HOME/Applications/aria2/aria2.sh
+
+    if [ ! -f "$HOME/.aria2/aria2.session" ]; then
+        touch "$HOME/.aria2/aria2.session"
+    fi
+
     echo "[Desktop Entry]
 Type=Application
 Exec=$HOME/Applications/aria2/aria2.sh
@@ -284,12 +300,13 @@ X-GNOME-Autostart-Delay=15" >  $HOME/.config/autostart/aria2.desktop
 fi
 if [ ! -d "$HOME/Applications/trojan" ]; then
     curl -L -o /tmp/trojan.tar.xz https://hub.fastgit.org/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+    tar -xf /tmp/trojan.tar.xz -C "$HOME/Applications"
     echo '#!/bin/sh
 
 TROJAN_PATH=$HOME/Applications/trojan
 nohup $TROJAN_PATH/trojan -c $TROJAN_PATH/config.json > $TROJAN_PATH/trojan.log 2>&1 &
 ' > $HOME/Applications/trojan/trojan.sh
-    tar -xf /tmp/trojan.tar.xz -C "$HOME/Applications"
+    chmod +x $HOME/Applications/trojan/trojan.sh
     echo '别忘了配置 trojan 的地址、端口和密码！'
     echo "[Desktop Entry]
 Type=Application
@@ -311,6 +328,22 @@ if [ ! -f '/usr/bin/nutstore' ] && [ ! -d "$HOME/Applications/nutstore" ]; then
     fi
 fi
 
+# 安装 node lts 16
+if [ "$id" == "debian" ] || [ "$id" == "ubuntu" ] || [ "$id" == "Deepin" ]; then
+    keyring='/usr/share/keyrings'
+    node_key_url="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    local_node_key="$keyring/nodesource.gpg"
+    if [ -x /usr/bin/curl ]; then
+        curl -s $node_key_url | gpg --dearmor | tee $local_node_key >/dev/null
+    else
+        wget -q -O - $node_key_url | gpg --dearmor | tee $local_node_key >/dev/null
+    fi
+    echo "deb [signed-by=$local_node_key] https://deb.nodesource.com/node_16.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+    echo "deb-src [signed-by=$local_node_key] https://deb.nodesource.com/node_16.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+    ${install_cmd}nodejs
+elif [ "$id" == "arch" ]; then
+    ${install_cmd}nodejs-lts-gallium npm
+fi
 
 # 下载、安装、破解 datagrip
 if [ ! -f '/usr/bin/datagrip' ] && [ ! -d "$HOME/Applications/datagrip" ]; then
@@ -329,7 +362,7 @@ fi
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 # 因为破解脚本跟随开发版本更新，所以无法一键破解
 if [ ! -f '/usr/bin/subl' ]; then
-    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
+    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ] || [ "$id" = "Deepin" ]; then
         wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
         sudo apt-get install apt-transport-https
         echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
@@ -410,7 +443,7 @@ echo '// Settings in here override those in "LSP-pyright/LSP-pyright.sublime-set
 echo '{
     "Default": {
         "author": "thepoy",
-        "email": "thepoy@aliyun.com"
+        "email": "thepoy@163.com"
     }
 }' > $HOME/.config/sublime-text/Packages/User/FileHeader.sublime-settings
 if [ ! -d "$HOME/.config/sublime-text/Packages/User/snippets" ]; then
