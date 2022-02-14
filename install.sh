@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-02-14 11:09:06
+# @Last Modified time: 2022-02-14 11:14:58
 
 # set -ex
 
@@ -188,9 +188,9 @@ if [ ! -d "/usr/local/go" ]; then
     curl -o /tmp/go.tar.gz $download_url
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
     # 配置 go
-    echo 'GOROOT=/usr/local/go
-GOPATH=$HOME/go
-PATH=$GOROOT/bin:$GOPATH/bin:$PATH' | sudo tee -a /etc/zsh/zshenv
+    echo 'export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$HOME/.local/bin:$HOME/.npm/bin:$HOME/.yarn/bin:$GOROOT/bin:$GOPATH/bin:$PATH' | sudo tee -a /etc/zsh/zshenv
     # 设置 goproxy
     source /etc/zsh/zshenv
     go env -w GO111MODULE=on
@@ -344,6 +344,11 @@ if [ "$id" == "debian" ] || [ "$id" == "ubuntu" ] || [ "$id" == "Deepin" ]; then
 elif [ "$id" == "arch" ]; then
     ${install_cmd}nodejs-lts-gallium npm
 fi
+npm config set registry "https://registry.npmmirror.com"
+npm config set cache "$HOME/.npm/.cache"
+npm config set prefix "$HOME/.npm"
+npm install -g yarn
+yarn global add typescript eslint
 
 # 下载、安装、破解 datagrip
 if [ ! -f '/usr/bin/datagrip' ] && [ ! -d "$HOME/Applications/datagrip" ]; then
