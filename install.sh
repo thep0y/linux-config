@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-02-14 11:14:58
+# @Last Modified time: 2022-02-16 22:04:32
 
 # set -ex
 
@@ -98,7 +98,7 @@ command -v git >/dev/null 2>&1 || { git_is_exists=1; }
 if [ $git_is_exists -ne 0 ]; then
     ${install_cmd}git
 fi
-git config --global url."https://hub.fastgit.xyz/".insteadOf "https://github.com/"
+git config --global url."https://ghproxy.com/https://github.com".insteadOf "https://github.com" 
 # github.com.cnpmjs.org 的证书可能无法验证，更新证书
 # sudo update-ca-certificates
 
@@ -242,8 +242,8 @@ if [ ! -f "/usr/bin/firefox" ]; then
         if [ ! -d "$HOME/Applications" ]; then
             mkdir -p $HOME/Applications
         fi
-        curl -L -o /tmp/firefox-esr.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux&lang=zh-CN"
-        tar -xf /tmp/firefox-esr.tar.bz2 -C $HOME/Applicationswhre
+        curl -L -o /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux&lang=zh-CN"
+        tar -xf /tmp/firefox.tar.bz2 -C $HOME/Applications
     elif [ "$id" = "debian" ]; then
         # 只支持 debian 11 以上，我本人不会使用 11 以下的 debian，包括 deepin
         ${install_cmd}firefox firefox-l10n-zh-cn
@@ -299,7 +299,7 @@ Comment[zh_CN]=No description
 X-GNOME-Autostart-Delay=15" >  $HOME/.config/autostart/aria2.desktop
 fi
 if [ ! -d "$HOME/Applications/trojan" ]; then
-    curl -L -o /tmp/trojan.tar.xz https://hub.fastgit.org/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+    curl -L -o /tmp/trojan.tar.xz https://hub.fastgit.xyz/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
     tar -xf /tmp/trojan.tar.xz -C "$HOME/Applications"
     echo '#!/bin/sh
 
@@ -514,19 +514,7 @@ curl -o $HOME/.config/mpv/mpv.conf https://raw.fastgit.org/thep0y/mpv-config/mas
 
 # 安装 typora
 if [ ! -f '/usr/bin/typora' ] && [ "$ID" = "arch" ]; then
-    # yay -S typora-free # 被墙
-    curl -L -o /tmp/typora.deb https://gitee.com/thepoy/linux-configuration-shell/attach_files/934951/download/typora_0.11.18_amd64.deb
-    if [ ! -f '/usr/bin/debtap' ]; then
-        yay -S debtap
-        sudo sed -i "s/ftp.debian.org/$mirrors_url/g" /usr/bin/debtap
-        sudo sed -i "s/ports.ubuntu.com/$mirrors_url/g" /usr/bin/debtap
-        sudo sed -i "s/archive.ubuntu.com/$mirrors_url/g" /usr/bin/debtap
-        sudo sed -i "s/github.com/hub.fastgit.org/g" /usr/bin/debtap
-        sudo sed -i "s/aur.archlinux.org/aur.tuna.tsinghua.edu.cn/g" /usr/bin/debtap
-        sudo debtap -u
-    fi
-    debtap /tmp/typora.deb
-    sudo pacman -U /tmp/typora-0.11.18-1-x86_64.pkg.tar.zst
+    yay -S typora
 else
     echo "此发行版 [$ID] 待完善"
 fi
