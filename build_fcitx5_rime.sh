@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2022-05-07 11:57:09
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-05-07 12:45:12
+# @Last Modified time: 2022-05-07 12:48:16
 
 # 卸载 fcitx4
 sudo apt autoremove fcitx-bin
@@ -39,3 +39,5 @@ export XMODIFIERS=@im=fcitx" >> ~/.xinputrc
 
 # 添加自启
 cp /usr/share/applications/org.fcitx.Fcitx5.desktop ~/.config/autostart
+
+echo 'fcitx5-rime安装完成，注销或重启即可使用'
