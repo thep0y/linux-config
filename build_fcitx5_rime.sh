@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2022-05-07 11:57:09
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-05-20 12:06:55
+# @Last Modified time: 2022-05-20 12:10:05
 
 # 卸载 fcitx4
 echo '卸载 fcitx 程序及相关依赖 ...'
@@ -79,5 +79,9 @@ X-Deepin-AppID=org.fcitx.Fcitx5
 Hidden=false
 " > $HOME/.config/autostart/org.fcitx.Fcitx5.desktop
 echo 'fcitx5 已设置开机或登录启动'
+
+echo '安装 fcitx5 图形配置软件'
+sudo apt install fcitx5-config-qt
+echo 'fcitx5 图形配置软件已安装'
 
 echo 'fcitx5-rime 安装完成，注销或重启即可使用'
