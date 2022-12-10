@@ -33,7 +33,7 @@ echo '*******************************************************************'
 
 # 安装必需的依赖
 echo '安装 fcitx5 依赖 ...'
-sudo apt install -y cmake build-essential extra-cmake-modules libdbus-1-dev libevent-dev gettext libfmt-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-keysyms1-dev libxcb-xinerama0-dev libxcb-xkb-dev libcairo2-dev libxkbfile-dev libxkbcommon-dev libxkbcommon-x11-dev libjson-c-dev libsdl-pango-dev libgdk-pixbuf2.0-dev libwayland-dev wayland-protocols libenchant-dev libsystemd-dev libegl1-mesa-dev librime-dev appstream clang uthash-dev libxcb-randr0-dev libxcb-xfixes0-dev
+sudo apt install -y cmake build-essential extra-cmake-modules libdbus-1-dev libevent-dev gettext libfmt-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-keysyms1-dev libxcb-xinerama0-dev libxcb-xkb-dev libcairo2-dev libxkbfile-dev libxkbcommon-dev libxkbcommon-x11-dev libjson-c-dev libsdl-pango-dev libgdk-pixbuf2.0-dev libwayland-dev wayland-protocols libenchant-dev libsystemd-dev libegl1-mesa-dev librime-dev appstream clang uthash-dev libxcb-randr0-dev libxcb-xfixes0-dev fcitx5-frontend-gtk2 fcitx5-frontend-gtk3 fcitx5-frontend-qt5
 echo 'fcitx5 依赖安装完成'
 echo '*******************************************************************'
 
