@@ -115,29 +115,13 @@ if [ ! -f "$HOME/.vimrc" ]; then
     curl -o $HOME/.vimrc https://raw.fastgit.org/thep0y/vim/master/.vimrc
 fi
 
-# 安装 zsh
-zsh_is_exists=0
-command -v zsh >/dev/null 2>&1 || { zsh_is_exists=1; }
-if [ $zsh_is_exists -ne 0 ]; then
-    ${install_cmd}zsh
-fi
-
-# 解释器为 bash，无法获取 ZSH_CUSTOM 变量，需要折中
-zsh_custom="$HOME/.oh-my-zsh/custom"
-if [ ! -d $zsh_custom ]; then
-    sh -c "$(curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-fi
-if [ ! -d "$zsh_custom/plugins/zsh-autosuggestions" ]; then
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git $zsh_custom/plugins/zsh-autosuggestions
-fi
-if [ ! -d "$zsh_custom/plugins/zsh-syntax-highlighting" ]; then
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $zsh_custom/plugins/zsh-syntax-highlighting
-fi
-# 看看第 73 行是否是 plugins=(git)
-zsh_plugins="$(sed -n '73p' $HOME/.zshrc)"
-if [ $zsh_plugins = 'plugins=(git)' ]; then
-    echo 'zsh没添加插件'
-    sed -i '73c plugins=(\n  git\n  zsh-autosuggestions\n  zsh-syntax-highlighting\n)' $HOME/.zshrc
+# 安装 fish
+fish_is_exists=0
+command -v fish >/dev/null 2>&1 || { fish_is_exists=1; }
+if [ $fish_is_exists -ne 0 ]; then
+    if [ "$ID" = "Deepin" ]; then
+    fi
+    ${install_cmd}fish
 fi
 
 # 安装 conda
@@ -187,15 +171,17 @@ if [ ! -d "/usr/local/go" ]; then
     download_url="https://dl.google.com/go${download_ele:41}"
     curl -o /tmp/go.tar.gz $download_url
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
-    # 配置 go
-    echo 'export GOROOT=/usr/local/go
+    if [ "$SHELL" = 'zsh' ]; then
+        # 配置 go
+        echo 'export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$HOME/.local/bin:$HOME/.npm/bin:$HOME/.yarn/bin:$GOROOT/bin:$GOPATH/bin:$PATH' | sudo tee -a /etc/zsh/zshenv
-    # 设置 goproxy
-    source /etc/zsh/zshenv
+        # 设置 goproxy
+        source /etc/zsh/zshenv
+    fi
+
     go env -w GO111MODULE=on
     go env -w GOPROXY=https://goproxy.cn,direct
-    go install github.com/thep0y/go-up2b@latest
 fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
@@ -328,7 +314,7 @@ if [ ! -f '/usr/bin/nutstore' ] && [ ! -d "$HOME/Applications/nutstore" ]; then
     fi
 fi
 
-# 安装 node lts 16
+# 安装 node lts 18
 if [ "$id" == "debian" ] || [ "$id" == "ubuntu" ] || [ "$id" == "Deepin" ]; then
     keyring='/usr/share/keyrings'
     node_key_url="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
@@ -338,8 +324,8 @@ if [ "$id" == "debian" ] || [ "$id" == "ubuntu" ] || [ "$id" == "Deepin" ]; then
     else
         wget -q -O - $node_key_url | gpg --dearmor | tee $local_node_key >/dev/null
     fi
-    echo "deb [signed-by=$local_node_key] https://deb.nodesource.com/node_16.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
-    echo "deb-src [signed-by=$local_node_key] https://deb.nodesource.com/node_16.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+    echo "deb [signed-by=$local_node_key] https://deb.nodesource.com/node_18.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+    echo "deb-src [signed-by=$local_node_key] https://deb.nodesource.com/node_18.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
     ${install_cmd}nodejs
 elif [ "$id" == "arch" ]; then
     ${install_cmd}nodejs-lts-gallium npm
