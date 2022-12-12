@@ -213,7 +213,7 @@ if [ ! -f '/usr/bin/docker' ]; then
     fi
     if [ ! -f '/etc/docker/daemon.json' ]; then
         echo '{
-        "registry-mirrors": ["https://mci3f39b.mirror.aliyuncs.com"]
+        "registry-mirrors": ["https://dockerproxy.com"]
     }' | sudo tee -a /etc/docker/daemon.json
     fi
     sudo systemctl daemon-reload
