@@ -213,12 +213,11 @@ if [ ! -f '/usr/bin/docker' ]; then
     fi
     if [ ! -f '/etc/docker/daemon.json' ]; then
         echo '{
-        "registry-mirrors": ["https://dockerproxy.com"]
-    }' | sudo tee -a /etc/docker/daemon.json
+    "registry-mirrors": ["https://dockerproxy.com"]
+}' | sudo tee -a /etc/docker/daemon.json
     fi
     sudo systemctl daemon-reload
     sudo systemctl restart docker
-    sudo usermod -aG docker $USER
 fi
 
 # 安装浏览器，edge 和 firefox
