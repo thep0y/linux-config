@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-12-13 17:52:43
+# @Last Modified time: 2022-12-13 18:34:59
 
 set -euo pipefail
 
@@ -16,7 +16,7 @@ mirrors_url=""
 if [ $MIRRORS_URL ]; then
     mirrors_url=$MIRRORS_URL
 else
-    mirrors_url="mirrors.aliyun.com"
+    mirrors_url="mirrors.ustc.edu.cn"
 fi
 
 codename=""
@@ -28,9 +28,9 @@ if [ "$ID" = "arch" ]; then
     remove_cmd="sudo pacman -R --noconfirm "
 
     archlinuxcn="$(tail -n 1 /etc/pacman.conf)"
-    if [ "$archlinuxcn" != 'Server = https://mirrors.aliyun.com/archlinuxcn/$arch' ]; then
-        echo '[archlinuxcn]
-Server = https://mirrors.aliyun.com/archlinuxcn/$arch' | sudo tee -a /etc/pacman.conf
+    if [ "$archlinuxcn" != "Server = https://$mirrors_url/archlinuxcn/\$arch" ]; then
+        echo "[archlinuxcn]
+Server = https://$mirrors_url/archlinuxcn/\$arch" | sudo tee -a /etc/pacman.conf
         sudo pacman -Sy
         sudo pacman -S archlinuxcn-keyring
     fi
@@ -103,17 +103,17 @@ git config --global url."https://ghproxy.com/https://github.com".insteadOf "http
 # sudo update-ca-certificates
 
 # 检测 vim 是否存在，不存在则安装，存在则配置
-vim_is_exists=0
-command -v vim >/dev/null 2>&1 || { vim_is_exists=1; }
-if [ $vim_is_exists -ne 0 ]; then
-    ${install_cmd}vim
-fi
-if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
-    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
-fi
-if [ ! -f "$HOME/.vimrc" ]; then
-    curl -o $HOME/.vimrc https://raw.fastgit.org/thep0y/vim/master/.vimrc
-fi
+# vim_is_exists=0
+# command -v vim >/dev/null 2>&1 || { vim_is_exists=1; }
+# if [ $vim_is_exists -ne 0 ]; then
+#     ${install_cmd}vim
+# fi
+# if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
+#     git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+# fi
+# if [ ! -f "$HOME/.vimrc" ]; then
+#     curl -o $HOME/.vimrc https://raw.fastgit.org/thep0y/vim/master/.vimrc
+# fi
 
 # 安装 fish
 fish_is_exists=0
@@ -147,13 +147,13 @@ custom_channels:
   simpleitk: https://mirrors.bfsu.edu.cn/anaconda/cloud' > $HOME/.condarc
 fi
 
+conda_cmd=$HOME/miniconda3/bin/conda
 
 # 修改 pip 源
 if [ ! -f "$HOME/.config/pip/pip.conf" ]; then
     $HOME/miniconda3/bin/pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 fi
 
-conda_cmd=$HOME/miniconda3/bin/conda
 # 创建 work 环境
 if [[ ! $($conda_cmd env list) =~ 'work' ]]; then
     $conda_cmd create -n work python=3.9
@@ -190,7 +190,7 @@ fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
 if [ ! -f '/usr/bin/docker' ]; then
-    if [ "$id" = "debian" ] || [ "$id" = "Deepin" ]; then
+    if [ "$ID" = "debian" ] || [ "$ID" = "Deepin" ]; then
         ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
         curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/debian/gpg | sudo apt-key add -
         echo "deb [arch=amd64] https://mirrors.bfsu.edu.cn/docker-ce/linux/debian \
@@ -198,7 +198,7 @@ if [ ! -f '/usr/bin/docker' ]; then
        stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
         $update_cmd
         ${install_cmd}docker-ce
-    elif [ "$id" = "ubuntu" ]; then
+    elif [ "$ID" = "ubuntu" ]; then
         ${install_cmd}apt-transport-https ca-certificates curl gnupg2 software-properties-common
         curl -fsSL https://repo.huaweicloud.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
         sudo add-apt-repository "deb [arch=amd64] https://repo.huaweicloud.com/docker-ce/linux/ubuntu $codename stable"
@@ -226,27 +226,27 @@ fi
 
 # 安装浏览器，edge 和 firefox
 if [ ! -f "/usr/bin/firefox" ]; then
-    if [ "$id" = "ubuntu" ] || [ "$id" = "Deepin" ]; then
+    if [ "$ID" = "ubuntu" ] || [ "$ID" = "Deepin" ]; then
         # 对于没有默认安装 firefox 的发行版安装最新的 firefox-esr
         if [ ! -d "$HOME/Applications" ]; then
             mkdir -p $HOME/Applications
         fi
         curl -L -o /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=zh-CN"
         tar -xf /tmp/firefox.tar.bz2 -C $HOME/Applications
-    elif [ "$id" = "debian" ]; then
+    elif [ "$ID" = "debian" ]; then
         # 只支持 debian 11 以上，我本人不会使用 11 以下的 debian
         ${install_cmd}firefox firefox-l10n-zh-cn
     fi
 fi
 
 if [ ! -f "/usr/bin/microsoft-edge-stable" ]; then
-    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
+    if [ "$ID" = "debian" ] || [ "$ID" = "ubuntu" ] || [ "$ID" = "Deepin" ]; then
         # 用 python 定位最新版的 edge
         edge_html="'''$(curl https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/)'''"
         egde_latest_deb=$(python3 -c "import re;latest=$edge_html.split('\n')[-4];result=re.search(r'href=\"(.*?)\"', latest); print(result.group(1))")
         edge_download_url="https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/$egde_latest_deb"
         curl -o /tmp/edge.deb $edge_download_url
-        sudo dpkg -i /tmp/edge.deb
+        sudo sudo apt-get --fix-broken install /tmp/edge.deb
     elif [ "$ID" = "arch" ]; then
         yay -S microsoft-edge-stable-bin
     else
@@ -318,7 +318,7 @@ if [ ! -f '/usr/bin/nutstore' ] && [ ! -d "$HOME/Applications/nutstore" ]; then
 fi
 
 # 安装 node lts 18
-if [ "$id" == "debian" ] || [ "$id" == "ubuntu" ] || [ "$id" == "Deepin" ]; then
+if [ "$ID" == "debian" ] || [ "$ID" == "ubuntu" ] || [ "$ID" == "Deepin" ]; then
     keyring='/usr/share/keyrings'
     node_key_url="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
     local_node_key="$keyring/nodesource.gpg"
@@ -330,7 +330,7 @@ if [ "$id" == "debian" ] || [ "$id" == "ubuntu" ] || [ "$id" == "Deepin" ]; then
     echo "deb [signed-by=$local_node_key] https://deb.nodesource.com/node_18.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
     echo "deb-src [signed-by=$local_node_key] https://deb.nodesource.com/node_18.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
     ${install_cmd}nodejs
-elif [ "$id" == "arch" ]; then
+elif [ "$ID" == "arch" ]; then
     ${install_cmd}nodejs-lts-gallium npm
 fi
 npm config set registry "https://registry.npmmirror.com"
@@ -360,7 +360,7 @@ fi
 # 安装 sublime text，并添加插件（如果无法下载插件则创建插件配置文件）
 # 因为破解脚本跟随开发版本更新，所以无法一键破解
 if [ ! -f '/usr/bin/subl' ]; then
-    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ] || [ "$id" = "Deepin" ]; then
+    if [ "$ID" = "debian" ] || [ "$ID" = "ubuntu" ] || [ "$ID" = "Deepin" ]; then
         wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
         sudo apt-get install apt-transport-https
         echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
@@ -456,6 +456,9 @@ curl -o $HOME/.config/sublime-text/Packages/User/snippets/struct_func.sublime-sn
 if [ ! -f '/usr/bin/code' ]; then
     if [ "$ID" = "arch" ]; then
         ${install_cmd}code
+    elif [ "$ID" = "Deepin" ] || [ "$ID" = "debian" ] || [ "$ID" = "ubuntu" ]; then
+        curl -L 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -o /tmp/code.deb
+        sudo apt-get --fix-broken install /tmp/code.deb
     else
         echo "此发行版 [$ID] 待完善"
     fi
@@ -463,7 +466,7 @@ fi
 
 # 安装 fcitx5-rime，并下载 98 五笔码表和皮肤
 if [ ! -f "/usr/bin/fcitx5" ]; then
-    if [ "$id" = "debian" ] || [ "$id" = "ubuntu" ]; then
+    if [ "$ID" = "debian" ] || [ "$ID" = "ubuntu" ]; then
         ${install_cmd}fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt
     elif [ "$ID" = "arch" ]; then
         ${install_cmd}fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt
@@ -517,8 +520,6 @@ if [ -d "$HOME/.config/Typora" ]; then
     curl -o $HOME/.config/Typora/themes/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
 fi
 
-# 直播解析
-if [ ! -d "$HOME/Development/python" ]; then
-    mkdir -p $HOME/Development/python
-fi
-curl -o $HOME/Development/python/douyu.py https://raw.fastgit.org/wbt5/real-url/master/douyu.py
+chsh -s /usr/bin/fish
+# 初始化 conda
+$conda_cmd init fish
