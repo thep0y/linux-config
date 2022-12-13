@@ -2,7 +2,26 @@
 # @Author: thepoy
 # @Date:   2022-05-07 11:57:09
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-05-20 12:11:45
+# @Last Modified time: 2022-12-13 18:10:49
+
+set -euo pipefail
+
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     警告：目前没有一键卸载脚本， 
+    如需卸载 fcitx5-rime 请自   
+    行寻找解决办法。
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+是否继续？(y/n)："
+read input
+declare -u INPUT=$input
+if [ $INPUT = 'N' ]; then
+    echo '退出脚本'
+    exit 0
+elif [ $INPUT = 'Y' ]; then
+    echo '开始安装 fcitx5-rime ...'
+else
+    echo "未知的输入：$INPUT"
+    exit 1
 
 # 卸载 fcitx4
 echo '卸载 fcitx 程序及相关依赖 ...'
@@ -25,10 +44,16 @@ echo 'github 已设置代理'
 # 克隆必需的仓库
 cd /tmp
 echo '克隆 fcitx5-rime 相关依赖仓库 ...'
-git clone https://github.com/fcitx/xcb-imdkit.git
-git clone https://github.com/fcitx/fcitx5.git
-git clone https://github.com/fcitx/fcitx5-rime.git
-echo 'fcitx5-rime 相关依赖仓库已克隆到 /tmp'
+if [ ! -d "/tmp/xcb-imdkit" ]; then
+    git clone https://github.com/fcitx/xcb-imdkit.git
+fi
+if [ ! -d "/tmp/fcitx5" ]; then
+    git clone https://github.com/fcitx/fcitx5.git
+fi
+if [ ! -d "/tmp/fcitx5-rime" ]; then
+    git clone https://github.com/fcitx/fcitx5-rime.git
+fi
+echo 'fcitx5-rime 相关依赖仓库已克隆到 /tmp，重启后自动删除'
 echo '*******************************************************************'
 
 # 安装必需的依赖
@@ -40,16 +65,25 @@ echo '*******************************************************************'
 # 编绎安装仓库
 echo '编绎 xcb-imdkit'
 cd /tmp/xcb-imdkit
+if [ -d 'build' ]; then
+    fm -rf build
+fi
 mkdir build && cd $_ && cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make -j8 && sudo make install
 echo 'xcb-imdkit 已编绎并安装'
 echo '*******************************************************************'
 echo '编绎 fcitx5'
 cd /tmp/fcitx5
+if [ -d 'build' ]; then
+    fm -rf build
+fi
 mkdir build && cd $_ && cmake .. && make -j8 && sudo make install
 echo 'fcitx5 已编绎并安装'
 echo '*******************************************************************'
 echo '编绎 fcitx5-rime'
 cd /tmp/fcitx5-rime
+if [ -d 'build' ]; then
+    fm -rf build
+fi
 mkdir build && cd $_ && cmake .. && make -j8 && sudo make install
 echo 'fcitx5-rime 已编绎并安装'
 echo '*******************************************************************'
@@ -89,7 +123,7 @@ echo 'fcitx5 已设置开机或登录启动'
 echo '*******************************************************************'
 
 echo '安装 fcitx5 图形配置软件'
-sudo apt install fcitx5-config-qt
+sudo apt install -y fcitx5-config-qt
 echo 'fcitx5 图形配置软件已安装'
 echo '*******************************************************************'
 
