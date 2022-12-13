@@ -2,9 +2,9 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-02-16 22:04:32
+# @Last Modified time: 2022-12-13 17:52:43
 
-# set -ex
+set -euo pipefail
 
 install_cmd=''
 remove_cmd=''
@@ -171,17 +171,21 @@ if [ ! -d "/usr/local/go" ]; then
     download_url="https://dl.google.com/go${download_ele:41}"
     curl -o /tmp/go.tar.gz $download_url
     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+
+    GOROOT=/usr/local/go
+    GOPATH='$HOME/go'
+    LOCAL_BIN='$HOME/.local/bin'
+    NPM_BIN='$HOME/.npm/bin'
+
     if [ "$SHELL" = 'zsh' ]; then
         # 配置 go
-        echo 'export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
-export PATH=$HOME/.local/bin:$HOME/.npm/bin:$HOME/.yarn/bin:$GOROOT/bin:$GOPATH/bin:$PATH' | sudo tee -a /etc/zsh/zshenv
-        # 设置 goproxy
-        source /etc/zsh/zshenv
+        echo -e "export GOROOT=$GOROOT\nexport GOPATH=$GOPATH\nexport PATH=$LOCAL_BIN:$NPM_BIN:\$GOROOT/bin:\$GOPATH/bin:\$PATH" | sudo tee -a /etc/zsh/zshenv
+    elif [ "$SHELL" = 'fish' ]; then
+        echo -e "set -x GOROOT $GOROOT\nset -x GOPATH $GOPATH\nset -x PATH $LOCAL_BIN $NPM_BIN \$GOPATH/bin \$GOROOT/bin \$PATH\n" >> $HOME/.config/fish/config.fish
     fi
 
-    go env -w GO111MODULE=on
-    go env -w GOPROXY=https://goproxy.cn,direct
+    $GOROOT/bin/go env -w GO111MODULE=on
+    $GOROOT/bin/go env -w GOPROXY=https://goproxy.cn,direct
 fi
 
 # 安装 docker 、添加当前用户到 docker 组，并配置镜像仓库
@@ -222,15 +226,15 @@ fi
 
 # 安装浏览器，edge 和 firefox
 if [ ! -f "/usr/bin/firefox" ]; then
-    if [ "$id" = "ubuntu" ]; then
+    if [ "$id" = "ubuntu" ] || [ "$id" = "Deepin" ]; then
         # 对于没有默认安装 firefox 的发行版安装最新的 firefox-esr
         if [ ! -d "$HOME/Applications" ]; then
             mkdir -p $HOME/Applications
         fi
-        curl -L -o /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux&lang=zh-CN"
+        curl -L -o /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=zh-CN"
         tar -xf /tmp/firefox.tar.bz2 -C $HOME/Applications
     elif [ "$id" = "debian" ]; then
-        # 只支持 debian 11 以上，我本人不会使用 11 以下的 debian，包括 deepin
+        # 只支持 debian 11 以上，我本人不会使用 11 以下的 debian
         ${install_cmd}firefox firefox-l10n-zh-cn
     fi
 fi
@@ -332,8 +336,12 @@ fi
 npm config set registry "https://registry.npmmirror.com"
 npm config set cache "$HOME/.npm/.cache"
 npm config set prefix "$HOME/.npm"
-npm install -g yarn
-yarn global add typescript eslint
+npm i -g pnpm
+
+# 安装 bun
+if [ ! -d "$HOME/.bun" ]; then
+    curl -fsSL https://gitee.com/thepoy/linux-configuration-shell/raw/master/bun.sh | bash
+fi
 
 # 下载、安装、破解 datagrip
 if [ ! -f '/usr/bin/datagrip' ] && [ ! -d "$HOME/Applications/datagrip" ]; then
