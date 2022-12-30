@@ -151,12 +151,12 @@ conda_cmd=$HOME/miniconda3/bin/conda
 
 # 修改 pip 源
 if [ ! -f "$HOME/.config/pip/pip.conf" ]; then
-    $HOME/miniconda3/bin/pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
+    $HOME/miniconda3/bin/pip config set global.index-url https://mirror.sjtu.edu.cn/pypi/web/simple
 fi
 
 # 创建 work 环境
 if [[ ! $($conda_cmd env list) =~ 'work' ]]; then
-    $conda_cmd create -n work python=3.9
+    $conda_cmd create -n work python=3.10
 
     # 激活 work 环境，并安装常用包
     # zsh 安装的 conda，在 bash 会话里无法正常运行 activate，所以只创建，之后手动安装依赖
@@ -288,7 +288,7 @@ Comment[zh_CN]=No description
 X-GNOME-Autostart-Delay=15" >  $HOME/.config/autostart/aria2.desktop
 fi
 if [ ! -d "$HOME/Applications/trojan" ]; then
-    curl -L -o /tmp/trojan.tar.xz https://hub.fastgit.xyz/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+    curl -L -o /tmp/trojan.tar.xz https://ghproxy.com/https://github.com/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
     tar -xf /tmp/trojan.tar.xz -C "$HOME/Applications"
     echo '#!/bin/sh
 
@@ -331,7 +331,7 @@ if [ "$ID" == "debian" ] || [ "$ID" == "ubuntu" ] || [ "$ID" == "Deepin" ]; then
     echo "deb-src [signed-by=$local_node_key] https://deb.nodesource.com/node_18.x ${codename} main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
     ${install_cmd}nodejs
 elif [ "$ID" == "arch" ]; then
-    ${install_cmd}nodejs-lts-gallium npm
+    ${install_cmd}nodejs-lts-hydrogen npm
 fi
 npm config set registry "https://registry.npmmirror.com"
 npm config set cache "$HOME/.npm/.cache"
