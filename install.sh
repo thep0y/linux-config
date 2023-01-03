@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2022-12-13 18:34:59
+# @Last Modified time: 2023-01-03 14:25:15
 
 set -euo pipefail
 
@@ -311,9 +311,16 @@ if [ ! -f '/usr/bin/nutstore' ] && [ ! -d "$HOME/Applications/nutstore" ]; then
     if [ "$ID" = "arch" ]; then
         yay -S nutstore-experimental
     else
-        curl -o /tmp/nutstore.tar.gz https://www.jianguoyun.com/static/exe/installer/nutstore_linux_dist_x64.tar.gz
-        mkdir -p $HOME/Applications/nutstore && tar zxf /tmp/nutstore.tar.gz -C $HOME/Applications/nutstor
-        bash $HOME/Applications/nutstor/bin/install_core.sh
+        nutstore_dir=$HOME/Applications/nutstore
+        curl -L -o /tmp/nutstore.tar.gz https://www.jianguoyun.com/static/exe/installer/nutstore_linux_dist_x64.tar.gz
+        mkdir -p $nutstore_dir && tar zxf /tmp/nutstore.tar.gz -C $nutstore_dir
+        bash $nutstore_dir/bin/install_core.sh
+
+        if [ ! -d "$HOME/.nutstore" ]; then
+            mkdir $HOME/.nutstore
+        fi
+
+        ln -s $nutstore_dir $HOME/.nutstore/dist
     fi
 fi
 
