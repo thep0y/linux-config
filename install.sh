@@ -279,7 +279,7 @@ nohup aria2c --conf-path=$HOME/.aria2/aria2.conf > /dev/null 2>&1 &' > $HOME/App
 
     echo "[Desktop Entry]
 Type=Application
-Exec=$HOME/Applications/aria2/aria2.sh
+Exec=sh -c \"sleep 5 && $HOME/Applications/aria2/aria2.sh\"
 X-GNOME-Autostart-enabled=true
 NoDisplay=false
 Hidden=false
@@ -299,7 +299,7 @@ nohup $TROJAN_PATH/trojan -c $TROJAN_PATH/config.json > $TROJAN_PATH/trojan.log 
     echo '别忘了配置 trojan 的地址、端口和密码！'
     echo "[Desktop Entry]
 Type=Application
-Exec=$HOME/Applications/trojan/trojan.sh
+Exec=sh -c \"sleep 3 && $HOME/Applications/trojan/trojan.sh\"
 X-GNOME-Autostart-enabled=true
 NoDisplay=false
 Hidden=false
