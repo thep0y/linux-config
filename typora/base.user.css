@@ -41,10 +41,17 @@ code,
     font-size: 14px;
 }
 
-code {
-    background-color: #263238 !important;
+[md-inline="code"] {
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    background: #263238;
     color: #FFCB6B;
-    padding: 1px 4px;
+}
+
+[md-inline="code"]>code {
+  padding: 0;
+  background-color: initial;
+  border: initial;
 }
 
 #write pre.ty-contain-cm {
