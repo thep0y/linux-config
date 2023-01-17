@@ -41,6 +41,12 @@ code,
     font-size: 14px;
 }
 
+code {
+    background-color: #263238 !important;
+    color: #FFCB6B;
+    padding: 1px 4px;
+}
+
 #write pre.ty-contain-cm {
     background-color: #263238;
 }
