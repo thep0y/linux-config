@@ -54,6 +54,10 @@ code,
   border: initial;
 }
 
+div.code-tooltip {
+    background: inherit;
+}
+
 #write pre.ty-contain-cm {
     background-color: #263238;
 }
