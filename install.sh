@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2023-01-03 14:25:15
+# @Last Modified time: 2023-01-17 20:11:38
 
 set -euo pipefail
 
@@ -379,6 +379,8 @@ if [ ! -f '/usr/bin/subl' ]; then
         echo 'unkown platform'
         exit 1
     fi
+
+    mkdir -p $HOME/.config/sublime-text/Packages/User
 fi
 if [ ! -f "$HOME/.config/sublime-text/Packages/User/Default.sublime-keymap" ]; then
     curl -o $HOME/.config/sublime-text/Packages/User/Default.sublime-keymap https://gitee.com/thepoy/sublime-text-4-settings/raw/master/key_bindings.json
@@ -521,11 +523,12 @@ if [ ! -f '/usr/bin/typora' ] && [ "$ID" = "arch" ]; then
 else
     echo "此发行版 [$ID] 待完善"
 fi
-if [ -d "$HOME/.config/Typora" ]; then
-    curl -o $HOME/.config/Typora/themes/drake-ayu.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-ayu.css
-    curl -o $HOME/.config/Typora/themes/drake-vue.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-vue.css
-    curl -o $HOME/.config/Typora/themes/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
+if [ ! -d "$HOME/.config/Typora" ]; then
+    mkdir -p $HOME/.config/Typora/themes
 fi
+curl -o $HOME/.config/Typora/themes/drake-ayu.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-ayu.css
+curl -o $HOME/.config/Typora/themes/drake-vue.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/drake-vue.css
+curl -o $HOME/.config/Typora/themes/base.user.css https://gitee.com/thepoy/linux-configuration-shell/raw/master/typora/base.user.css
 
 chsh -s /usr/bin/fish
 # 初始化 conda
