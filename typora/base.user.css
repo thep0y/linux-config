@@ -1,3 +1,7 @@
+:root {
+    --user-monospace: 'Luxi Mono', monospace;
+}
+
 html {
     font-size: 16px;
 }
@@ -37,11 +41,12 @@ h6 {
 
 code,
 .CodeMirror pre {
-    font-family: 'Luxi Mono' !important;
+    font-family: var(--user-monospace) !important;
     font-size: 14px;
 }
 
-[md-inline="code"] {
+#write [md-inline="code"],
+#write code {
     padding: 0.1em 0.35em;
     border-radius: 3px;
     background: #263238;
@@ -66,11 +71,18 @@ div.code-tooltip {
 #write pre.ty-contain-cm span.ty-input {
     background-color: #263238;
     color: white;
+    font-family: var(--user-monospace);
+}
+
+div.CodeMirror-linenumber {
+    font-family: var(--user-monospace);
+    font-size: .9rem;
 }
 
 .cm-s-inner.CodeMirror {
     background-color: #263238;
     color: #EEFFFF;
+    border-radius: 6px;
 }
 
 .cm-s-inner .CodeMirror-gutters {
@@ -174,7 +186,7 @@ div.code-tooltip {
     color: #FFCB6B;
 }
 
-.cm-s-inner .cm-attribute {
+.cm-s-inner span.cm-attribute {
     color: #C792EA;
 }
 
