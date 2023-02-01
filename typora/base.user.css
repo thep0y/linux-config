@@ -45,6 +45,11 @@ code,
     font-size: 14px;
 }
 
+#write {
+    width: inherit;
+    padding: inherit;
+}
+
 #write .CodeMirror {
     padding: 5px 0;
 }
