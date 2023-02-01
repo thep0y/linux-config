@@ -45,12 +45,19 @@ code,
     font-size: 14px;
 }
 
-#write [md-inline="code"],
+#write .CodeMirror {
+    padding: 5px 0;
+}
+
 #write code {
+    margin: 0 2px;
     padding: 0.1em 0.35em;
     border-radius: 3px;
     background: #263238;
     color: #FFCB6B;
+    vertical-align: baseline;
+    font-weight: 400;
+    font-size: 14px;
 }
 
 [md-inline="code"]>code {
