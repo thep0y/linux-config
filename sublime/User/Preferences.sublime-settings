@@ -1,0 +1,16 @@
+{
+    "channels": [
+        "/home/thepoy/.config/sublime-text/channel_v3.json"
+    ],
+    "ignored_packages": [
+        "Vintage",
+    ],
+    "translate_tabs_to_spaces": true,
+    "tab_size": 4,
+    "font_size": 12,
+    "word_wrap": true,
+    "lsp_format_on_save": true,
+    "color_scheme": "ayu-light.sublime-color-scheme",
+    "theme": "Adaptive.sublime-theme",
+    "font_face": "Source Code Pro",
+}

@@ -2,7 +2,7 @@
 # @Author: thepoy
 # @Date:   2021-12-30 19:08:33
 # @Last Modified by:   thepoy
-# @Last Modified time: 2023-01-17 20:11:38
+# @Last Modified time: 2023-02-06 10:20:33
 
 set -euo pipefail
 
@@ -380,86 +380,10 @@ if [ ! -f '/usr/bin/subl' ]; then
         exit 1
     fi
 
-    mkdir -p $HOME/.config/sublime-text/Packages/User
+    work_dir=${pwd}
+
+    ln -s $work_dir/sublime/User $HOME/.config/sublime-text/Packages/User
 fi
-if [ ! -f "$HOME/.config/sublime-text/Packages/User/Default.sublime-keymap" ]; then
-    curl -o $HOME/.config/sublime-text/Packages/User/Default.sublime-keymap https://gitee.com/thepoy/sublime-text-4-settings/raw/master/key_bindings.json
-fi
-echo '[
-    {
-        "button": "button2",
-        "count": 1,
-        "modifiers": [
-            "ctrl"
-        ],
-        "command": "jump_back"
-    },
-    {
-        "button": "button1",
-        "count": 1,
-        "modifiers": [
-            "ctrl"
-        ],
-        "press_command": "drag_select",
-        "command": "goto_definition"
-    },
-    // LSP: Go To Definition
-    {
-        "button": "button1",
-        "count": 1,
-        "modifiers": [
-            "ctrl"
-        ],
-        "press_command": "drag_select",
-        "command": "lsp_symbol_definition",
-        "args": {
-            "side_by_side": false
-        },
-        "context": [
-            {
-                "key": "lsp.session_with_capability",
-                "operator": "equal",
-                "operand": "definitionProvider"
-            },
-            {
-                "key": "auto_complete_visible",
-                "operator": "equal",
-                "operand": false
-            }
-        ]
-    }
-]' > $HOME/.config/sublime-text/Packages/User/Default.sublime-mousemap
-echo '{
-    "ignored_packages":
-    [
-        "Vintage",
-    ],
-    "translate_tabs_to_spaces": true,
-    "tab_size": 4,
-    "font_size": 11,
-    "word_wrap": true,
-    "lsp_format_on_save": true
-}
-' > $HOME/.config/sublime-text/Packages/User/Preferences.sublime-settings
-echo '// Settings in here override those in "LSP-pyright/LSP-pyright.sublime-settings"
-{
-    "settings": {
-        "python.venvPath": "/home/thepoy/miniconda3/envs"
-    }
-}' > $HOME/.config/sublime-text/Packages/User/LSP-pyright.sublime-settings
-echo '{
-    "Default": {
-        "author": "thepoy",
-        "email": "thepoy@163.com"
-    }
-}' > $HOME/.config/sublime-text/Packages/User/FileHeader.sublime-settings
-if [ ! -d "$HOME/.config/sublime-text/Packages/User/snippets" ]; then
-    mkdir $HOME/.config/sublime-text/Packages/User/snippets
-fi
-curl -o $HOME/.config/sublime-text/Packages/User/snippets/finit.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/finit.sublime-snippet
-curl -o $HOME/.config/sublime-text/Packages/User/snippets/fmain.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/fmain.sublime-snippet
-curl -o $HOME/.config/sublime-text/Packages/User/snippets/func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/func.sublime-snippet
-curl -o $HOME/.config/sublime-text/Packages/User/snippets/struct_func.sublime-snippet https://gitee.com/thepoy/sublime-text-4-settings/raw/master/snippets/struct_func.sublime-snippet
 
 # 安装 vscode。vscode 的 go 提示比 st 丰富，能帮助写出更完美的代码风格
 if [ ! -f '/usr/bin/code' ]; then
@@ -533,3 +457,6 @@ curl -o $HOME/.config/Typora/themes/base.user.css https://gitee.com/thepoy/linux
 chsh -s /usr/bin/fish
 # 初始化 conda
 $conda_cmd init fish
+
+echo -e '==> 脚本运行结束'
+echo -e '  sublime text 需要先安装 Package Control，\n再安装所需插件后才能使用 sublime 目录中除 \nUser 目录以外的插件的配置，如 FileHeader。'

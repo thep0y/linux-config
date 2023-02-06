@@ -1,0 +1,60 @@
+// primary - `Ctrl` on Windows and Linux, or `⌘` on Mac
+[
+  {
+    "keys": [
+      "primary+y"
+    ],
+    "command": "run_macro_file",
+    "args": {
+      "file": "res://Packages/Default/Delete Line.sublime-macro"
+    }
+  },
+  {
+    "keys": [
+      "primary+d"
+    ],
+    "command": "duplicate_line"
+  },
+  {
+    "keys": [
+      "alt+shift+up"
+    ],
+    "command": "swap_line_up"
+  },
+  {
+    "keys": [
+      "alt+shift+down"
+    ],
+    "command": "swap_line_down"
+  },
+  {
+    "command": "lsp_format_document",
+    "keys": [
+      "primary+alt+l"
+    ],
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operator": "equal",
+        "operand": "documentFormattingProvider | documentRangeFormattingProvider"
+      }
+    ]
+  },
+  {
+    "command": "lsp_show_diagnostics_panel",
+    "keys": [
+      "primary+alt+m"
+    ],
+    "context": [
+      {
+        "key": "setting.lsp_active"
+      }
+    ]
+  },
+  {
+    "keys": [
+      "ctrl+shift+t"
+    ],
+    "command": "open_terminal"
+  }
+]
