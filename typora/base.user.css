@@ -1,5 +1,5 @@
 :root {
-    --user-monospace: 'Luxi Mono', monospace;
+    --user-monospace: 'Luxi Mono', "PingFang SC", monospace;
 }
 
 html {
