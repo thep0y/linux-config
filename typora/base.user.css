@@ -68,6 +68,10 @@ code,
     font-size: 14px;
 }
 
+table.md-table {
+    width: 100% !important;
+}
+
 [md-inline="code"]>code {
     padding: 0;
     background-color: initial;
